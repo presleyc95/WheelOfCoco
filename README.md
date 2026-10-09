@@ -1,7 +1,9 @@
 # What Coco Are You?
 
 A slot machine that tells each designer which Coco they are today.
-The same name always gets the same Coco for the whole day, and a new one tomorrow.
+Each spin has a 10% chance of landing a Coco. Designers can keep spinning until they get one;
+after that, it's locked in for the rest of the day and added to their collection.
+Progress is saved in each person's own browser.
 
 ## Deploy to GitHub Pages
 

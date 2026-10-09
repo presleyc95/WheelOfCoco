@@ -217,6 +217,25 @@
   .pay-item .tile { width: 72px; height: 72px; margin: 0 auto 6px; border-radius: 50%; border: 2px solid var(--gold-deep); }
   .pay-item strong { display: block; color: var(--ink); font-size: 13px; }
 
+  /* ---------- Collection ---------- */
+  .collection {
+    margin-top: 28px; width: 100%; max-width: 560px; text-align: center;
+    border: 2px solid var(--gold-deep); border-radius: 14px; background: rgba(0,0,0,.3);
+    padding: 14px 16px 18px;
+  }
+  .collection h3 { font: 700 18px Cinzel, serif; color: var(--gold); margin: 0 0 12px; }
+  .col-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .col-item { position: relative; width: 64px; }
+  .col-item .tile { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold); }
+  .col-item.locked .tile { filter: grayscale(1) brightness(.25); border-color: #444; }
+  .col-item .count {
+    position: absolute; top: -4px; right: -6px; min-width: 22px; height: 22px; padding: 0 5px;
+    border-radius: 11px; background: var(--red); color: #fff; font: 700 12px/22px Inter, sans-serif;
+  }
+  .col-item.locked .count { display: none; }
+  .col-item.today .tile { box-shadow: 0 0 0 3px var(--gold-bright), 0 0 16px var(--gold-bright); }
+  .col-item small { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.2; }
+
   /* coins */
   .coin {
     position: fixed; top: -40px; width: 26px; height: 26px; border-radius: 50%;
@@ -260,7 +279,7 @@
   <input type="text" id="name" placeholder="Your name, designer" maxlength="40" autocomplete="off">
   <button class="spin-btn" id="spin">SPIN</button>
 </div>
-<div class="credits" id="credits">One fortune per designer per day. No refunds.</div>
+<div class="credits" id="credits">Keep pulling until a Coco shows up. One Coco per designer per day.</div>
 
 <section class="result" id="result" aria-live="polite">
   <div class="kicker" id="r-kicker">TODAY YOU ARE</div>
@@ -276,6 +295,11 @@
   <div class="house" id="r-house"></div>
 </section>
 
+<section class="collection" id="collection" hidden>
+  <h3 id="col-title">Your Collection</h3>
+  <div class="col-grid" id="col-grid"></div>
+</section>
+
 <details class="paytable">
   <summary>Paytable: meet the Cocos</summary>
   <div class="pay-grid" id="paytable"></div>
@@ -285,25 +309,25 @@
   // Crop boxes are squares in the 799x535 source image: [x, y, size]
   const IMG_W = 799, IMG_H = 535;
   const COCOS = [
-    { id: "dj", name: "DJ Coco", crop: [8, 150, 108], weight: 16, rarity: "COMMON",
+    { id: "dj", name: "DJ Coco", crop: [8, 150, 108], weight: 24, rarity: "COMMON",
       desc: "Headphones on, notifications off. You are locked in and the beat goes on. Today you ship.",
       power: "Do Not Disturb" },
-    { id: "rodeo", name: "Rodeo Coco", crop: [72, 120, 112], weight: 16, rarity: "COMMON",
+    { id: "rodeo", name: "Rodeo Coco", crop: [72, 120, 112], weight: 24, rarity: "COMMON",
       desc: "Pink hat, big energy. You will wrangle that backlog like a wild stallion. Yeehaw.",
       power: "Lasso the redlines" },
-    { id: "tundra", name: "Tundra Coco", crop: [162, 105, 115], weight: 16, rarity: "COMMON",
+    { id: "tundra", name: "Tundra Coco", crop: [162, 105, 115], weight: 24, rarity: "COMMON",
       desc: "Cool under pressure. Scope creep, surprise deadlines, angry reviewers: none of it rattles you.",
       power: "Ice-cold focus" },
-    { id: "highroller", name: "High Roller Coco", crop: [335, 92, 132], weight: 15, rarity: "RARE",
+    { id: "highroller", name: "High Roller Coco", crop: [335, 92, 132], weight: 8, rarity: "RARE",
       desc: "You sit on the throne and guard the golden chest. The house always wins, and today you ARE the house.",
       power: "Double down" },
-    { id: "elder", name: "Elder Coco", crop: [478, 95, 132], weight: 15, rarity: "RARE",
+    { id: "elder", name: "Elder Coco", crop: [478, 95, 132], weight: 8, rarity: "RARE",
       desc: "Ancient wisdom flows through the beard. People will come to you with questions, and you will have answers.",
       power: "Tribal knowledge" },
-    { id: "mystic", name: "Mystic Coco", crop: [622, 88, 140], weight: 15, rarity: "RARE",
+    { id: "mystic", name: "Mystic Coco", crop: [622, 88, 140], weight: 8, rarity: "RARE",
       desc: "The shades see what others cannot. Trust your gut on every design call. The scepter does not lie.",
       power: "Foresight" },
-    { id: "shadow", name: "Shadow Coco", crop: [592, 322, 128], weight: 7, rarity: "LEGENDARY",
+    { id: "shadow", name: "Shadow Coco", crop: [592, 322, 128], weight: 4, rarity: "LEGENDARY",
       desc: "The forbidden Coco. Few have rolled it. Speak little, judge everything, and walk the halls unseen.",
       power: "Vanish from meetings" },
   ];
@@ -316,7 +340,7 @@
       "The chest stays locked. The Cocos have looked upon you and said nothing.",
       "The house wins. You are merely a person today, and that is fine.",
       "The throne room is closed to you. Do your work like a regular mortal.",
-      "Not a single Coco answered the call. Try again tomorrow.",
+      "Not a single Coco answered the call. Yet.",
       "The reels did not align. Somewhere, a Coco is laughing.",
     ],
   };
@@ -327,36 +351,33 @@
     el.style.backgroundPosition = (x / (IMG_W - s) * 100) + "% " + (y / (IMG_H - s) * 100) + "%";
   }
 
-  // Deterministic RNG: same name + same day = same Coco
-  function hash(str) {
-    let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
-    for (let i = 0; i < str.length; i++) {
-      const ch = str.charCodeAt(i);
-      h1 = Math.imul(h1 ^ ch, 2654435761);
-      h2 = Math.imul(h2 ^ ch, 1597334677);
-    }
-    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-    return h1 >>> 0;
-  }
-  function mulberry32(a) {
-    return function () {
-      a |= 0; a = a + 0x6D2B79F5 | 0;
-      let t = Math.imul(a ^ a >>> 15, 1 | a);
-      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-      return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    };
-  }
   function today() {
     const d = new Date();
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
-  function fortuneFor(name) {
-    const rng = mulberry32(hash(name.trim().toLowerCase() + "|" + today()));
-    const lucky = 1 + Math.floor(rng() * 99);
-    if (rng() >= COCO_CHANCE) return { coco: null, lucky, bustLine: BUST.lines[Math.floor(rng() * BUST.lines.length)] };
-    let roll = rng() * TOTAL_WEIGHT, pick = COCOS[0];
-    for (const c of COCOS) { if ((roll -= c.weight) < 0) { pick = c; break; } }
+  function roll() {
+    const lucky = 1 + Math.floor(Math.random() * 99);
+    if (Math.random() >= COCO_CHANCE) return { coco: null, lucky, bustLine: BUST.lines[Math.floor(Math.random() * BUST.lines.length)] };
+    let r = Math.random() * TOTAL_WEIGHT, pick = COCOS[0];
+    for (const c of COCOS) { if ((r -= c.weight) < 0) { pick = c; break; } }
     return { coco: pick, lucky };
+  }
+
+  // Save data lives in this browser only, keyed by lowercased name:
+  // { day, spins, today: { id, lucky } | null, counts: { [cocoId]: n } }
+  const SAVE_KEY = "coco-save";
+  function loadAll() {
+    try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch (e) { return {}; }
+  }
+  function loadPlayer(name) {
+    const p = loadAll()[name.toLowerCase()] || { counts: {} };
+    if (p.day !== today()) { p.day = today(); p.spins = 0; p.today = null; }
+    return p;
+  }
+  function savePlayer(name, p) {
+    const all = loadAll();
+    all[name.toLowerCase()] = p;
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(all)); } catch (e) {}
   }
 
   // Build reels
@@ -434,7 +455,21 @@
     resultEl.classList.remove("show");
     creditsEl.textContent = "Rolling the bones...";
 
-    const fortune = fortuneFor(name);
+    // Already collected today? Replay it. Otherwise roll fresh.
+    const player = loadPlayer(name);
+    const already = !!player.today;
+    let fortune;
+    if (already) {
+      fortune = { coco: COCOS.find(c => c.id === player.today.id), lucky: player.today.lucky };
+    } else {
+      fortune = roll();
+      player.spins++;
+      if (fortune.coco) {
+        player.today = { id: fortune.coco.id, lucky: fortune.lucky, spins: player.spins };
+        player.counts[fortune.coco.id] = (player.counts[fortune.coco.id] || 0) + 1;
+      }
+      savePlayer(name, player);
+    }
     const { coco } = fortune;
     // On a bust, land on three different faces so it never looks like a match
     const stops = coco ? [coco, coco, coco]
@@ -452,20 +487,23 @@
     });
 
     setTimeout(() => {
-      showResult(name, fortune);
+      showResult(name, fortune, player);
+      renderCollection(name);
       if (coco) {
         reels.forEach(r => r.reel.classList.add("win"));
-        rainCoins(coco.rarity === "LEGENDARY" ? 90 : coco.rarity === "RARE" ? 50 : 30);
-        creditsEl.textContent = "JACKPOT! Spin again all you like. The house has already decided.";
+        if (!already) rainCoins(coco.rarity === "LEGENDARY" ? 90 : coco.rarity === "RARE" ? 50 : 30);
+        creditsEl.textContent = already
+          ? "You already collected today's Coco. Come back tomorrow for another."
+          : `JACKPOT on spin #${player.spins}! ${coco.name} added to your collection.`;
       } else {
-        creditsEl.textContent = "BUST. Spin again all you like. The house has already decided.";
+        creditsEl.textContent = `BUST on spin #${player.spins}. Pull again.`;
       }
       spinning = false;
       spinBtn.disabled = lever.disabled = false;
     }, (2.2 + (REELS - 1) * 0.7) * 1000 + 100);
   }
 
-  function showResult(name, { coco, lucky, bustLine }) {
+  function showResult(name, { coco, lucky, bustLine }, player) {
     const portrait = document.getElementById("r-portrait");
     const rar = document.getElementById("r-rarity");
     resultEl.classList.toggle("bust", !coco);
@@ -487,12 +525,37 @@
       rar.className = "rarity bust";
       document.getElementById("r-desc").textContent = bustLine;
       document.getElementById("r-odds").textContent = "9 in 10";
-      document.getElementById("r-power").textContent = "Try tomorrow";
+      document.getElementById("r-power").textContent = "Pull again";
     }
-    document.getElementById("r-house").textContent =
-      `${name}, your fortune for ${new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })} is sealed. Come back tomorrow.`;
+    const day = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+    const took = player.today && player.today.spins ? ` It took ${player.today.spins} ${player.today.spins === 1 ? "spin" : "spins"}.` : "";
+    document.getElementById("r-house").textContent = coco
+      ? `${name}, this is your Coco for ${day}.${took} Come back tomorrow for another.`
+      : `${name}, the house is not done with you. Pull the lever again.`;
     resultEl.classList.add("show");
     resultEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function renderCollection(name) {
+    const section = document.getElementById("collection");
+    if (!name) { section.hidden = true; return; }
+    const p = loadPlayer(name);
+    const grid = document.getElementById("col-grid");
+    grid.innerHTML = "";
+    let owned = 0;
+    for (const c of COCOS) {
+      const n = p.counts[c.id] || 0;
+      if (n) owned++;
+      const item = document.createElement("div");
+      item.className = "col-item" + (n ? "" : " locked") + (p.today && p.today.id === c.id ? " today" : "");
+      const t = document.createElement("div");
+      t.className = "tile"; cropStyle(t, c);
+      item.appendChild(t);
+      item.insertAdjacentHTML("beforeend", `<span class="count">×${n}</span><small>${n ? c.name : "???"}</small>`);
+      grid.appendChild(item);
+    }
+    document.getElementById("col-title").textContent = `${name}'s Collection · ${owned}/${COCOS.length}`;
+    section.hidden = false;
   }
 
   function rainCoins(n) {
@@ -511,6 +574,8 @@
   spinBtn.addEventListener("click", spin);
   lever.addEventListener("click", spin);
   nameEl.addEventListener("keydown", e => { if (e.key === "Enter") spin(); });
+  nameEl.addEventListener("change", () => renderCollection(nameEl.value.trim()));
+  renderCollection(nameEl.value.trim());
 </script>
 </body>
 </html>
