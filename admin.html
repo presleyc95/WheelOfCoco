@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coco Command Center</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="cocos.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --felt: #0d3b2a; --felt-dark: #06241a;
+    --gold: #e9c46a; --gold-bright: #ffe39a; --gold-deep: #a87c2a;
+    --red: #b3261e; --green: #4ade80;
+    --ink: #f6ecd2; --muted: #c9b98f;
+    --panel: #120802; --panel-2: #2a1405;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh; color: var(--ink); font-family: Inter, system-ui, sans-serif;
+    background: radial-gradient(ellipse at top, rgba(233,196,106,.15), transparent 60%),
+                radial-gradient(ellipse at center, var(--felt) 0%, var(--felt-dark) 100%);
+    background-attachment: fixed;
+    padding: 24px 16px 48px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  h1 {
+    font: 900 clamp(24px, 4vw, 38px) "Cinzel Decorative", serif; margin: 0;
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold) 50%, var(--gold-deep));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .who { color: var(--muted); font-size: 13px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .card {
+    background: linear-gradient(#1d0f04, #0c0601); border: 2px solid var(--gold-deep); border-radius: 14px; padding: 18px;
+  }
+  .muted { color: var(--muted); font-size: 13px; line-height: 1.5; }
+  .banner { border: 1px dashed var(--gold-deep); border-radius: 10px; padding: 8px 12px; font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .banner[hidden] { display: none; }
+  input, select {
+    font: 600 15px Inter, sans-serif; padding: 10px 12px; border-radius: 10px;
+    border: 2px solid var(--gold-deep); background: var(--panel); color: var(--ink); min-width: 0;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--gold-bright); }
+  input[type=number] { width: 100px; }
+  .btn {
+    font: 700 14px Inter, sans-serif; padding: 10px 16px; border-radius: 10px; cursor: pointer; border: 0;
+    color: #2a1405; background: linear-gradient(180deg, var(--gold-bright), var(--gold) 50%, var(--gold-deep));
+    white-space: nowrap;
+  }
+  .btn:disabled { filter: grayscale(.7) brightness(.7); cursor: default; }
+  .btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--gold-deep); }
+  .btn.ghost:hover { color: var(--ink); border-color: var(--gold); }
+  .btn.danger { background: #5a0e09; color: #ffd6d6; border: 1px solid #b3261e; }
+  .btn.sm { padding: 6px 10px; font-size: 13px; }
+
+  /* Sign in */
+  .signin { max-width: 380px; margin: 60px auto; display: grid; gap: 12px; }
+  .signin h2 { font: 700 20px Cinzel, serif; color: var(--gold-bright); margin: 0; }
+  .error { color: #ff8a80; font-size: 14px; min-height: 1.2em; }
+  code { background: var(--panel); border: 1px solid var(--gold-deep); padding: 2px 6px; border-radius: 6px; font-size: 13px; word-break: break-all; }
+
+  /* Summary */
+  .summary { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 16px; }
+  .sum { text-align: center; padding: 14px 8px; }
+  .sum b { display: block; font: 700 26px Cinzel, serif; color: var(--gold-bright); }
+  .sum span { font-size: 12px; color: var(--muted); }
+  .sum.online b { color: var(--green); }
+
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .toolbar .grow { flex: 1 1 200px; }
+  .grant { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; border-radius: 14px; border: 2px solid var(--gold-deep); background: rgba(0,0,0,.35); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 860px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(168,124,42,.3); vertical-align: middle; }
+  th { font: 700 12px Inter, sans-serif; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); background: rgba(0,0,0,.3); cursor: pointer; user-select: none; }
+  th.sorted { color: var(--gold-bright); }
+  tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: rgba(233,196,106,.06); }
+  td.num { font-variant-numeric: tabular-nums; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #555; margin-right: 8px; }
+  .dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .pname { font-weight: 700; }
+  .pname.none { color: var(--muted); font-style: italic; font-weight: 400; }
+  .mini { display: flex; gap: 3px; }
+  .face {
+    width: 26px; height: 26px; border-radius: 50%; background-image: url("cocos.webp"); background-repeat: no-repeat;
+    border: 1px solid var(--gold-deep); position: relative; flex: none;
+  }
+  .face.off { filter: grayscale(1) brightness(.3); }
+  .face i {
+    position: absolute; right: -5px; bottom: -5px; font: 700 10px/14px Inter, sans-serif; font-style: normal;
+    min-width: 14px; height: 14px; padding: 0 3px; border-radius: 7px; background: var(--red); color: #fff; text-align: center;
+  }
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 1px; padding: 3px 8px; border-radius: 999px; margin-right: 4px; }
+  .badge.cursed { background: #5a0e09; color: #ffb3b3; }
+  .badge.tribute { background: #2a3a12; color: #c8f08a; }
+  .empty { text-align: center; padding: 30px; color: var(--muted); }
+
+  /* Edit dialog */
+  dialog {
+    border: 3px solid var(--gold); border-radius: 18px; padding: 0; color: var(--ink);
+    background: linear-gradient(#1d0f04, #0c0601);
+    width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 24px);
+  }
+  dialog::backdrop { background: rgba(0,0,0,.75); }
+  .modal-head {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px;
+    border-bottom: 1px solid var(--gold-deep); position: sticky; top: 0; background: #1d0f04; z-index: 1;
+  }
+  .modal-head h2 { font: 700 22px "Cinzel Decorative", serif; color: var(--gold-bright); margin: 0; }
+  .close-x { background: none; border: 0; color: var(--muted); font-size: 28px; line-height: 1; cursor: pointer; }
+  .modal-body { padding: 16px 18px; display: grid; gap: 18px; }
+  .modal-body h3 { font: 700 15px Cinzel, serif; color: var(--gold); margin: 0 0 10px; letter-spacing: 1px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .coco-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .coco-row { display: flex; align-items: center; gap: 10px; background: var(--panel-2); border-radius: 10px; padding: 6px 10px; }
+  .coco-row .face { width: 40px; height: 40px; }
+  .coco-row span { flex: 1; font-size: 13px; }
+  .coco-row input { width: 70px; }
+  .stat-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+  .stat-edit label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+  .stat-edit input { width: 100%; }
+  .check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+  .check input { width: 18px; height: 18px; accent-color: var(--gold); }
+  .modal-foot {
+    display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 14px 18px;
+    border-top: 1px solid var(--gold-deep); position: sticky; bottom: 0; background: #0c0601;
+  }
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100;
+    background: var(--panel-2); border: 2px solid var(--gold); border-radius: 12px; padding: 10px 18px; font-weight: 600;
+    opacity: 0; transition: opacity .2s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 860px) { .summary { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 520px) { .summary { grid-template-columns: repeat(2, 1fr); } .grant { margin-left: 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Coco Command Center</h1>
+    <div class="who" id="who" hidden>
+      <span id="who-email"></span>
+      <a class="btn ghost sm" href="./" target="_blank" rel="noopener">Open game</a>
+      <button class="btn ghost sm" id="signout">Sign out</button>
+    </div>
+  </header>
+  <div class="banner" id="local-banner" hidden>Local test mode: Firebase isn't connected yet, so this only shows players from this browser. The password is <b>admin</b>.</div>
+
+  <!-- Sign in -->
+  <form class="card signin" id="signin" hidden>
+    <h2>Admin sign in</h2>
+    <input type="email" id="email" placeholder="Email" autocomplete="username" required>
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" required>
+    <div class="error" id="signin-error"></div>
+    <button class="btn" type="submit">Sign in</button>
+  </form>
+
+  <!-- Signed in but not an admin -->
+  <div class="card signin" id="not-admin" hidden>
+    <h2>Not an admin yet</h2>
+    <p class="muted">You're signed in, but this account isn't on the admin list. In the Firebase console, open <b>Realtime Database → Data</b>, add a key <code>admins</code>, and inside it add your user ID with the value <code>true</code>:</p>
+    <code id="my-uid"></code>
+    <p class="muted">Then refresh this page.</p>
+  </div>
+
+  <!-- Dashboard -->
+  <main id="dash" hidden>
+    <section class="summary">
+      <div class="card sum online"><b id="s-online">0</b><span>Online now</span></div>
+      <div class="card sum"><b id="s-players">0</b><span>Players</span></div>
+      <div class="card sum"><b id="s-spins">0</b><span>Total spins</span></div>
+      <div class="card sum"><b id="s-cocos">0</b><span>Cocos found</span></div>
+      <div class="card sum"><b id="s-coins">0</b><span>Coins in pockets</span></div>
+      <div class="card sum"><b id="s-cursed">0</b><span>Cursed today</span></div>
+    </section>
+
+    <div class="toolbar">
+      <input class="grow" type="search" id="search" placeholder="Search players">
+      <select id="filter">
+        <option value="all">All players</option>
+        <option value="online">Online now</option>
+        <option value="cursed">Cursed today</option>
+        <option value="named">Has a name</option>
+      </select>
+      <div class="grant">
+        <span class="muted">Give everyone</span>
+        <input type="number" id="grant-amount" value="10" step="1">
+        <button class="btn" id="grant-btn">coins</button>
+      </div>
+      <button class="btn ghost" id="clear-feed">Clear activity feed</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="name">Player</th>
+            <th data-sort="coins">Coins</th>
+            <th>Collection</th>
+            <th data-sort="spins">Spins</th>
+            <th data-sort="cocos">Cocos</th>
+            <th data-sort="seen">Last seen</th>
+            <th>Today</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- Edit player -->
+<dialog id="edit" aria-labelledby="edit-title">
+  <div class="modal-head">
+    <h2 id="edit-title">Player</h2>
+    <span class="muted" id="edit-status"></span>
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <section>
+      <h3>Name</h3>
+      <div class="row">
+        <input type="text" id="e-name" maxlength="40" style="flex:1">
+        <button class="btn ghost" id="e-rename">Rename</button>
+      </div>
+    </section>
+    <section>
+      <h3>Coco Coins</h3>
+      <div class="row">
+        <input type="number" id="e-coins" min="0" step="1">
+        <button class="btn ghost sm" data-coins="10">+10</button>
+        <button class="btn ghost sm" data-coins="100">+100</button>
+        <button class="btn ghost sm" data-coins="-10">−10</button>
+        <button class="btn ghost sm" data-coins="zero">Set to 0</button>
+      </div>
+    </section>
+    <section>
+      <h3>Cocos</h3>
+      <div class="coco-grid" id="e-cocos"></div>
+    </section>
+    <section>
+      <h3>Today</h3>
+      <div class="row" style="gap:18px">
+        <label class="check"><input type="checkbox" id="e-cursed"> Cursed today</label>
+        <label class="check"><input type="checkbox" id="e-tribute"> Daily tribute used</label>
+        <label class="check"><input type="checkbox" id="e-boostday"> Reset today's boost purchases</label>
+        <label class="check"><input type="checkbox" id="e-clearboosts"> Clear active boosts <span class="muted" id="e-boosts"></span></label>
+        <label class="check"><input type="checkbox" id="e-refill"> Refill today's vault <span class="muted" id="e-vault"></span></label>
+      </div>
+    </section>
+    <section>
+      <h3>Lifetime stats</h3>
+      <div class="stat-edit" id="e-stats"></div>
+    </section>
+  </div>
+  <div class="modal-foot">
+    <div class="row">
+      <button class="btn danger" id="e-reset">Reset progress</button>
+      <button class="btn danger" id="e-delete">Delete player</button>
+    </div>
+    <div class="row">
+      <button class="btn ghost" data-close>Cancel</button>
+      <button class="btn" id="e-save">Save changes</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script type="module">
+  import { COCOS, STAT_KEYS, STAT_LABELS, cropStyle, today, normalizePlayer, DAILY_CAP, vaultLeft } from "./cocos.js";
+  import { createStore, isLocal } from "./store.js";
+
+  const $ = id => document.getElementById(id);
+  let store, players = {}, status = {}, editing = null, unwatch = null;
+  let sortKey = "seen", sortDir = -1;
+
+  function toast(msg) {
+    $("toast").textContent = msg;
+    $("toast").classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => $("toast").classList.remove("show"), 2200);
+  }
+  function ago(ms) {
+    if (!ms) return "—";
+    const s = Math.max(0, (Date.now() - ms) / 1000);
+    if (s < 60) return "just now";
+    if (s < 3600) return Math.floor(s / 60) + " min ago";
+    if (s < 86400) return Math.floor(s / 3600) + " hr ago";
+    return Math.floor(s / 86400) + " days ago";
+  }
+  const isOnline = uid => !!status[uid]?.online;
+
+  // ---------- Auth ----------
+  function show(view) {
+    for (const id of ["signin", "not-admin", "dash"]) $(id).hidden = id !== view;
+  }
+  $("signin").addEventListener("submit", async e => {
+    e.preventDefault();
+    $("signin-error").textContent = "";
+    try { await store.adminSignIn($("email").value.trim(), $("password").value); }
+    catch (err) { $("signin-error").textContent = err.message.replace("Firebase: ", ""); }
+  });
+  $("signout").addEventListener("click", () => store.adminSignOut());
+
+  async function onAuth(user) {
+    unwatch?.(); unwatch = null;
+    $("who").hidden = !user;
+    if (!user) { show("signin"); return; }
+    $("who-email").textContent = user.email;
+    if (!(await store.isAdmin())) {
+      $("my-uid").textContent = user.uid;
+      show("not-admin");
+      return;
+    }
+    show("dash");
+    unwatch = store.watchAll((p, s) => {
+      players = p; status = s;
+      render();
+      if (editing && $("edit").open) $("edit-status").textContent = statusText(editing);
+    });
+  }
+
+  // ---------- Table ----------
+  function rowData(uid) {
+    const p = normalizePlayer(structuredClone(players[uid] || {}));
+    return { uid, p, online: isOnline(uid), seen: isOnline(uid) ? Infinity : status[uid]?.lastChanged || 0 };
+  }
+  function statusText(uid) {
+    return isOnline(uid) ? "● Online now" : "Last seen " + ago(status[uid]?.lastChanged);
+  }
+  function render() {
+    const all = Object.keys(players).map(rowData);
+    // Summary
+    $("s-online").textContent = all.filter(r => r.online).length;
+    $("s-players").textContent = all.filter(r => r.p.name).length;
+    $("s-spins").textContent = all.reduce((s, r) => s + r.p.stats.spins, 0).toLocaleString();
+    $("s-cocos").textContent = all.reduce((s, r) => s + r.p.stats.cocos, 0).toLocaleString();
+    $("s-coins").textContent = all.reduce((s, r) => s + r.p.coins, 0).toLocaleString();
+    $("s-cursed").textContent = all.filter(r => r.p.cursedDay === today()).length;
+
+    const q = $("search").value.trim().toLowerCase();
+    const f = $("filter").value;
+    const rows = all.filter(r =>
+      (!q || (r.p.name || "").toLowerCase().includes(q)) &&
+      (f === "all" || (f === "online" && r.online) || (f === "cursed" && r.p.cursedDay === today()) || (f === "named" && r.p.name)));
+    const val = r => ({ name: (r.p.name || "~").toLowerCase(), coins: r.p.coins, spins: r.p.stats.spins, cocos: r.p.stats.cocos, seen: r.seen })[sortKey];
+    rows.sort((a, b) => (val(a) > val(b) ? 1 : val(a) < val(b) ? -1 : 0) * sortDir);
+    document.querySelectorAll("th[data-sort]").forEach(th => th.classList.toggle("sorted", th.dataset.sort === sortKey));
+
+    const body = $("rows");
+    body.innerHTML = "";
+    if (!rows.length) {
+      body.innerHTML = `<tr><td colspan="8" class="empty">${all.length ? "No players match." : "No players yet. Once someone opens the game, they'll show up here."}</td></tr>`;
+      return;
+    }
+    for (const r of rows) {
+      const tr = document.createElement("tr");
+      const name = document.createElement("td");
+      name.innerHTML = `<span class="dot ${r.online ? "on" : ""}"></span><span class="pname ${r.p.name ? "" : "none"}"></span>`;
+      name.querySelector(".pname").textContent = r.p.name || "(no name yet)";
+      tr.appendChild(name);
+      tr.insertAdjacentHTML("beforeend", `<td class="num">${r.p.coins.toLocaleString()}</td>`);
+      const col = document.createElement("td");
+      const mini = document.createElement("div");
+      mini.className = "mini";
+      for (const c of COCOS) {
+        const n = r.p.counts[c.id] || 0;
+        const f = document.createElement("div");
+        f.className = "face" + (n ? "" : " off");
+        f.title = `${c.name}: ${n}`;
+        cropStyle(f, c.crop);
+        if (n > 1) f.innerHTML = `<i>${n}</i>`;
+        mini.appendChild(f);
+      }
+      col.appendChild(mini);
+      tr.appendChild(col);
+      const t = today();
+      tr.insertAdjacentHTML("beforeend",
+        `<td class="num">${r.p.stats.spins.toLocaleString()}</td>` +
+        `<td class="num">${r.p.stats.cocos.toLocaleString()}</td>` +
+        `<td>${r.online ? "Online now" : ago(status[r.uid]?.lastChanged)}</td>` +
+        `<td>${r.p.cursedDay === t ? '<span class="badge cursed">CURSED</span>' : ""}${r.p.pledgeDay === t && r.p.cursedDay !== t ? '<span class="badge tribute">TRIBUTE</span>' : ""}</td>`);
+      const act = document.createElement("td");
+      const btn = document.createElement("button");
+      btn.className = "btn sm";
+      btn.textContent = "Edit";
+      btn.addEventListener("click", () => openEdit(r.uid));
+      act.appendChild(btn);
+      tr.appendChild(act);
+      body.appendChild(tr);
+    }
+  }
+  $("search").addEventListener("input", render);
+  $("filter").addEventListener("change", render);
+  document.querySelectorAll("th[data-sort]").forEach(th => th.addEventListener("click", () => {
+    if (sortKey === th.dataset.sort) sortDir *= -1;
+    else { sortKey = th.dataset.sort; sortDir = sortKey === "name" ? 1 : -1; }
+    render();
+  }));
+  setInterval(() => { if (!$("dash").hidden) render(); }, 30000); // keep "x min ago" fresh
+
+  $("clear-feed").addEventListener("click", async () => {
+    if (!confirm("Clear the whole activity feed for everyone?")) return;
+    await store.adminClearFeed();
+    toast("Activity feed cleared.");
+  });
+
+  $("grant-btn").addEventListener("click", async () => {
+    const n = parseInt($("grant-amount").value, 10);
+    if (!n) return;
+    if (!confirm(`${n > 0 ? "Give" : "Take"} ${Math.abs(n)} coins ${n > 0 ? "to" : "from"} all ${Object.keys(players).length} players?`)) return;
+    await store.adminGrantAll(n);
+    toast(`${n > 0 ? "+" : ""}${n} coins for everyone.`);
+  });
+
+  // ---------- Edit dialog ----------
+  let original = null;
+  function openEdit(uid) {
+    editing = uid;
+    const p = normalizePlayer(structuredClone(players[uid] || {}));
+    original = p;
+    $("edit-title").textContent = p.name || "(no name yet)";
+    $("edit-status").textContent = statusText(uid);
+    $("e-name").value = p.name || "";
+    $("e-coins").value = p.coins;
+
+    $("e-cocos").innerHTML = "";
+    for (const c of COCOS) {
+      const row = document.createElement("div");
+      row.className = "coco-row";
+      row.innerHTML = `<div class="face"></div><span></span><input type="number" min="0" step="1">`;
+      cropStyle(row.querySelector(".face"), c.crop);
+      row.querySelector("span").textContent = c.name;
+      const input = row.querySelector("input");
+      input.value = p.counts[c.id] || 0;
+      input.dataset.coco = c.id;
+      $("e-cocos").appendChild(row);
+    }
+
+    const t = today();
+    $("e-cursed").checked = p.cursedDay === t;
+    $("e-tribute").checked = p.pledgeDay === t;
+    $("e-boostday").checked = false;
+    $("e-clearboosts").checked = false;
+    $("e-boosts").textContent = p.boosts.length ? `(${p.boosts.map(b => `${b.name}, ${b.spins} left`).join("; ")})` : "(none active)";
+    $("e-clearboosts").disabled = !p.boosts.length;
+    const left = vaultLeft(p, Date.now());
+    $("e-refill").checked = false;
+    $("e-refill").disabled = left === DAILY_CAP;
+    $("e-vault").textContent = `(${DAILY_CAP - left}/${DAILY_CAP} earned today)`;
+
+    $("e-stats").innerHTML = "";
+    for (const k of STAT_KEYS) {
+      const l = document.createElement("label");
+      l.innerHTML = `<span></span><input type="number" min="0" step="1">`;
+      l.querySelector("span").textContent = STAT_LABELS[k];
+      const input = l.querySelector("input");
+      input.value = p.stats[k];
+      input.dataset.stat = k;
+      $("e-stats").appendChild(l);
+    }
+    $("edit").showModal();
+  }
+
+  document.querySelectorAll("[data-coins]").forEach(b => b.addEventListener("click", () => {
+    const el = $("e-coins"), v = b.dataset.coins;
+    el.value = v === "zero" ? 0 : Math.max(0, (parseInt(el.value, 10) || 0) + parseInt(v, 10));
+  }));
+  document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
+
+  const int = el => Math.max(0, parseInt(el.value, 10) || 0);
+  $("e-save").addEventListener("click", async () => {
+    // Only send fields that changed, so we don't overwrite what the player is doing right now
+    const p = original, patch = {}, t = today();
+    const coins = int($("e-coins"));
+    if (coins !== p.coins) patch.coins = coins;
+    $("e-cocos").querySelectorAll("input").forEach(i => {
+      const n = int(i);
+      if (n !== (p.counts[i.dataset.coco] || 0)) patch[`counts/${i.dataset.coco}`] = n || null;
+    });
+    $("e-stats").querySelectorAll("input").forEach(i => {
+      const n = int(i);
+      if (n !== p.stats[i.dataset.stat]) patch[`stats/${i.dataset.stat}`] = n;
+    });
+    if ($("e-cursed").checked !== (p.cursedDay === t)) patch.cursedDay = $("e-cursed").checked ? t : null;
+    if ($("e-tribute").checked !== (p.pledgeDay === t)) patch.pledgeDay = $("e-tribute").checked ? t : null;
+    if ($("e-boostday").checked) patch.boostDay = null;
+    if ($("e-clearboosts").checked) patch.boosts = null;
+    if ($("e-refill").checked) patch.earn = null;
+    if (!Object.keys(patch).length) { $("edit").close(); return; }
+    await store.adminUpdate(editing, patch);
+    $("edit").close();
+    toast(`Saved ${p.name || "player"}.`);
+  });
+
+  $("e-rename").addEventListener("click", async () => {
+    const name = $("e-name").value.trim().replace(/\s+/g, " ");
+    if (!name || name === original.name) return;
+    if (!(await store.adminRename(editing, name))) { toast(`"${name}" is already taken.`); return; }
+    original.name = name;
+    $("edit-title").textContent = name;
+    toast(`Renamed to ${name}.`);
+  });
+
+  $("e-reset").addEventListener("click", async () => {
+    const who = original.name || "this player";
+    if (!confirm(`Reset all of ${who}'s coins, Cocos, boosts and stats? Their name stays.`)) return;
+    await store.adminUpdate(editing, {
+      coins: 0, counts: null, latest: null, dry: 0, boosts: null, boostDay: null,
+      pledgeDay: null, pledgeDeclined: null, cursedDay: null, earn: null, stats: { since: today() },
+    });
+    $("edit").close();
+    toast(`${who} starts fresh.`);
+  });
+
+  $("e-delete").addEventListener("click", async () => {
+    const who = original.name || "this player";
+    if (!confirm(`Delete ${who} completely? Their name is freed up, and if they come back they'll start over as a new player.`)) return;
+    await store.adminDelete(editing);
+    $("edit").close();
+    toast(`${who} deleted.`);
+  });
+
+  // ---------- Start ----------
+  (async () => {
+    $("local-banner").hidden = !isLocal;
+    try { store = await createStore("admin"); }
+    catch (e) { console.error(e); show("signin"); $("signin-error").textContent = "Could not load Firebase. Check firebase-config.js."; return; }
+    store.onAdminAuth(onAuth);
+  })();
+</script>
+</body>
+</html>

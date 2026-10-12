@@ -287,32 +287,56 @@
   .modal-body h3:first-child { margin-top: 0; }
   .muted { color: var(--muted); font-size: 13px; margin: 0 0 10px; line-height: 1.5; }
 
-  .packs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .pack {
-    background: var(--panel-2); border: 2px solid var(--gold-deep); border-radius: 12px;
-    color: var(--ink); padding: 12px 8px; cursor: pointer; text-align: center; font-family: Inter, sans-serif;
+  .games { display: grid; gap: 10px; }
+  .game-card {
+    display: flex; gap: 12px; align-items: center; background: var(--panel-2);
+    border: 1px solid var(--gold-deep); border-radius: 12px; padding: 10px 12px;
   }
-  .pack:hover { border-color: var(--gold-bright); transform: translateY(-2px); }
-  .pack b { display: flex; align-items: center; justify-content: center; gap: 6px; font: 700 24px Cinzel, serif; color: var(--gold-bright); }
-  .pack span { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
-  .pack .diff { display: flex; justify-content: center; gap: 3px; margin-top: 6px; }
-  .pack .diff i { width: 8px; height: 8px; border-radius: 50%; background: #3a2306; }
-  .pack .diff i.on { background: var(--red); }
+  .game-card .face { width: 52px; height: 52px; border-width: 2px; }
+  .game-card .info { flex: 1; min-width: 0; }
+  .game-card strong { display: block; color: var(--gold-bright); font-family: Cinzel, serif; }
+  .game-card span { display: block; font-size: 13px; color: var(--muted); }
+  .game-card .gold-btn { flex: none; font-size: 14px; padding: 8px 18px; letter-spacing: 1px; }
 
-  .problem { text-align: center; }
-  .problem .prompt { font: 700 13px Inter, sans-serif; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
-  .eq {
-    font: 600 clamp(22px, 5vw, 30px) "Cambria Math", Cambria, Georgia, serif; color: var(--ink);
-    margin: 10px 0; letter-spacing: .5px;
+  #shop-game { text-align: center; }
+  .g-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .g-head b { font: 700 20px Cinzel, serif; color: var(--gold-bright); }
+  #g-hud { font: 700 16px Cinzel, serif; color: var(--gold); white-space: nowrap; }
+  #g-rules { font-size: 13px; color: var(--muted); margin: 6px 0 14px; text-align: left; }
+  .g-stage { min-height: 270px; display: grid; place-items: center; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+  .g-actions { display: flex; justify-content: center; gap: 10px; margin-top: 12px; }
+  .g-actions [hidden] { display: none; }
+
+  .g-whack { grid-template-columns: repeat(3, 80px); gap: 14px; justify-content: center; align-content: center; }
+  .hole {
+    width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--gold-deep); padding: 0; cursor: pointer;
+    background-color: #0a0502; background-repeat: no-repeat; background-image: none;
+    box-shadow: inset 0 8px 16px rgba(0,0,0,.8); transition: transform .08s;
   }
-  .answers { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 14px 0 6px; }
-  .answers label { display: flex; align-items: center; gap: 8px; font: 600 20px "Cambria Math", Cambria, Georgia, serif; }
-  .answers input { width: 110px; text-align: center; }
-  .problem .hint { font-size: 12px; color: var(--muted); }
-  .problem .actions { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
-  .feedback { min-height: 1.4em; margin-top: 10px; font-weight: 600; }
-  .feedback.good { color: #7ee08a; }
-  .feedback.bad { color: #ff8a80; }
+  .hole.up { background-image: url("cocos.webp"); border-color: var(--gold-bright); transform: scale(1.06); box-shadow: none; }
+  .hole.up.shadow { border-color: #a855f7; box-shadow: 0 0 16px #a855f7; }
+  .hole.hit { border-color: #4ade80; box-shadow: 0 0 18px #4ade80; }
+  .hole.bad { border-color: #ff3b30; box-shadow: 0 0 18px #ff3b30; }
+
+  .g-memory { grid-template-columns: repeat(4, 72px); gap: 10px; justify-content: center; align-content: center; }
+  .card {
+    width: 72px; height: 72px; border-radius: 12px; border: 2px solid var(--gold-deep); padding: 0; cursor: pointer;
+    background-color: #3a2306; background-repeat: no-repeat; background-image: none;
+    color: var(--gold); font: 900 26px Cinzel, serif;
+  }
+  .card.up, .card.done { background-image: url("cocos.webp"); color: transparent; border-color: var(--gold-bright); }
+  .card.done { opacity: .55; cursor: default; }
+
+  .g-reel { gap: 14px; align-content: center; }
+  .reel-target { display: flex; align-items: center; justify-content: center; gap: 10px; font: 700 14px Inter, sans-serif; color: var(--muted); }
+  .reel-target .face { width: 46px; height: 46px; border-width: 2px; }
+  .reel-window {
+    width: 150px; height: 150px; margin: 0 auto; border-radius: 18px; border: 4px solid var(--gold);
+    background-image: url("cocos.webp"); background-repeat: no-repeat; background-color: #0a0502;
+  }
+  .reel-window.good { border-color: #4ade80; box-shadow: 0 0 26px #4ade80; }
+  .reel-window.bad { border-color: #ff3b30; box-shadow: 0 0 26px #ff3b30; }
+  .reel-stop { font-size: 20px; padding: 14px 40px; }
 
   .boosts { display: grid; gap: 10px; }
   .boost {
@@ -358,6 +382,74 @@
   .checklist li::before { content: "✗ "; color: #ff6b6b; font-weight: 700; }
   .checklist li.ok { color: var(--ink); }
   .checklist li.ok::before { content: "✓ "; color: #7ee08a; }
+
+  /* ---------- Social ---------- */
+  .online-pill {
+    margin-top: 12px; display: inline-flex; gap: 8px; align-items: center; cursor: pointer;
+    background: rgba(0,0,0,.35); border: 1px solid var(--gold-deep); border-radius: 999px;
+    padding: 6px 14px; color: var(--ink); font: 600 14px Inter, sans-serif;
+  }
+  .online-pill:hover { border-color: var(--gold); }
+  .online-pill[hidden], .social[hidden], .feed[hidden] { display: none; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #555; display: inline-block; flex: none; }
+  .dot.on { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+  .social { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .badge-count { background: var(--red); color: #fff; border-radius: 999px; padding: 0 7px; font-size: 12px; margin-left: 4px; }
+  .badge-count[hidden] { display: none; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tab {
+    font: 600 13px Inter, sans-serif; padding: 7px 12px; border-radius: 999px; cursor: pointer;
+    background: transparent; color: var(--muted); border: 1px solid var(--gold-deep);
+  }
+  .tab.active { background: var(--gold); color: #2a1405; border-color: var(--gold); }
+  #player-search { width: 100%; margin-bottom: 12px; }
+  .plist { display: grid; gap: 8px; }
+  .plist .section-label { font: 700 12px Inter, sans-serif; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-top: 6px; }
+  .prow {
+    display: flex; align-items: center; gap: 10px; background: var(--panel-2); border: 1px solid var(--gold-deep);
+    border-radius: 12px; padding: 8px 10px; cursor: pointer; color: var(--ink);
+  }
+  .prow:hover { border-color: var(--gold); }
+  .prow.me { outline: 2px solid var(--gold-bright); }
+  .prow .pn { flex: 1; min-width: 0; }
+  .prow .pn b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .prow .pn small { color: var(--muted); font-size: 12px; }
+  .prow .gold-btn, .prow .ghost-btn { font-size: 12px; padding: 6px 10px; letter-spacing: 0; flex: none; }
+  .mini { display: flex; gap: 3px; flex: none; }
+  .face {
+    width: 24px; height: 24px; border-radius: 50%; background-image: url("cocos.webp"); background-repeat: no-repeat;
+    border: 1px solid var(--gold-deep); flex: none;
+  }
+  .face.off { filter: grayscale(1) brightness(.3); }
+  .lb-rank { width: 32px; text-align: center; font: 700 18px Cinzel, serif; color: var(--muted); flex: none; }
+  .lb-rank.r1 { color: #ffd700; } .lb-rank.r2 { color: #d8d8d8; } .lb-rank.r3 { color: #cd7f32; }
+  .lb-val { font: 700 18px Cinzel, serif; color: var(--gold-bright); flex: none; }
+  .profile-sub { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .tag { font-size: 11px; font-weight: 700; letter-spacing: 1px; padding: 3px 8px; border-radius: 999px; background: #5a0e09; color: #ffb3b3; }
+  #profile-actions { margin-top: 16px; justify-content: center; }
+  .empty-note { text-align: center; color: var(--muted); padding: 18px; font-size: 14px; }
+
+  .feed {
+    margin-top: 28px; width: 100%; max-width: 560px;
+    border: 2px solid var(--gold-deep); border-radius: 14px; background: rgba(0,0,0,.3); padding: 14px 16px;
+  }
+  .feed h3 { font: 700 18px Cinzel, serif; color: var(--gold); margin: 0 0 10px; text-align: center; }
+  .feed ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 280px; overflow-y: auto; }
+  .feed li { display: flex; gap: 10px; align-items: center; font-size: 14px; line-height: 1.35; }
+  .feed li .face { width: 30px; height: 30px; }
+  .feed li .what { flex: 1; min-width: 0; }
+  .feed li time { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .feed li.legendary .what { color: #f0b3ff; text-shadow: 0 0 10px rgba(241,7,163,.5); }
+  .feed li.curse .what { color: #ff8a80; }
+  .feed .icon { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--panel-2); border: 1px solid var(--gold-deep); font-size: 15px; }
+
+  .vault { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+  .vault-bar { flex: 1; height: 10px; border-radius: 5px; background: var(--panel); border: 1px solid var(--gold-deep); overflow: hidden; }
+  .vault-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright)); }
+
+  @media (max-width: 520px) { .prow .mini { display: none; } }
+
+  .mode-banner { margin-top: 24px; font-size: 12px; color: var(--muted); border: 1px dashed var(--gold-deep); border-radius: 8px; padding: 6px 12px; }
 
   /* ---------- Wrath ---------- */
   dialog.wrath {
@@ -418,7 +510,6 @@
   body.cursed .result, body.cursed dialog:not(.wrath) { background: linear-gradient(#120000, #000); }
   body.cursed .modal-head { background: #120000; }
   body.cursed .result .rarity:not(.legendary) { color: #ffb3b3; }
-  body.cursed .pack .diff i { background: #300; }
   body.cursed .coin-icon, body.cursed .coin {
     background: radial-gradient(circle at 35% 35%, #ff6b6b, #b00000 55%, #3a0000); border-color: #300; color: #300;
   }
@@ -455,7 +546,11 @@
     .reels { gap: 6px; padding: 8px; }
     .lever { height: 160px; }
     .lever .arm { height: 105px; }
-    .packs { grid-template-columns: repeat(2, 1fr); }
+    .g-whack { grid-template-columns: repeat(3, 72px); }
+    .hole { width: 72px; height: 72px; }
+    .g-memory { grid-template-columns: repeat(4, 62px); }
+    .card { width: 62px; height: 62px; }
+    .game-card { flex-wrap: wrap; }
     .boost { flex-direction: column; align-items: stretch; text-align: center; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -469,6 +564,7 @@
 <header>
   <div class="marquee"><h1 id="title">What Coco Are You?</h1></div>
   <p class="tagline" id="tagline">Pull the lever. The house decides who you are.</p>
+  <button class="online-pill" id="online-pill" hidden><span class="dot on"></span><span id="online-count">0 players online</span></button>
 </header>
 
 <div class="machine-wrap">
@@ -482,13 +578,18 @@
 </div>
 
 <div class="controls">
-  <input type="text" id="name" placeholder="Your name, designer" maxlength="40" autocomplete="off">
+  <input type="text" id="name" placeholder="Your name, player" maxlength="40" autocomplete="off">
   <button class="gold-btn" id="spin">SPIN<small>1 Coco Coin</small></button>
 </div>
 <div class="wallet" id="wallet" hidden>
   <span class="wallet-coins"><span class="coin-icon"></span><b id="coin-count">0</b> Coco Coins</span>
   <button class="gold-btn shop-btn" id="shop-open">SHOP</button>
   <button class="ghost-btn shop-btn" id="stats-open">STATS</button>
+</div>
+<div class="social" id="social" hidden>
+  <button class="ghost-btn" id="players-open">Players</button>
+  <button class="ghost-btn" id="friends-open">Friends <span class="badge-count" id="req-count" hidden>0</span></button>
+  <button class="ghost-btn" id="leader-open">Leaderboard</button>
 </div>
 <button class="gold-btn atone-btn" id="atone-open" hidden>BEG FOR FORGIVENESS</button>
 <div class="boost-status" id="boost-status"></div>
@@ -513,10 +614,16 @@
   <div class="col-grid" id="col-grid"></div>
 </section>
 
+<section class="feed" id="feed-section" hidden>
+  <h3>Live from the Throne Room</h3>
+  <ul id="feed"></ul>
+</section>
+
 <details class="paytable">
   <summary>Paytable: meet the Cocos</summary>
   <div class="pay-grid" id="paytable"></div>
 </details>
+<p class="mode-banner" id="mode-banner" hidden>Local test mode: progress is saved in this browser only until Firebase is connected.</p>
 
 <!-- Shop -->
 <dialog id="shop" aria-labelledby="shop-title">
@@ -527,9 +634,10 @@
   </div>
   <div class="modal-body">
     <div id="shop-main">
-      <h3>Buy Coco Coins</h3>
-      <p class="muted">The Cocos do not accept money. They accept algebra. Bigger bags, harder problems.</p>
-      <div class="packs" id="packs"></div>
+      <h3>Earn Coco Coins</h3>
+      <p class="muted">The Cocos reward skill, not homework. Play a mini-game; the better you do, the more you earn.</p>
+      <div class="vault"><div class="vault-bar"><i id="vault-fill"></i></div><span id="vault-text"></span></div>
+      <div class="games" id="games"></div>
 
       <h3>Daily Boosts</h3>
       <p class="muted">Each boost can be bought once per day. Boosts raise your chance of landing a Coco and stay with you until used.</p>
@@ -542,15 +650,14 @@
       </div>
     </div>
 
-    <div id="shop-problem" class="problem" hidden>
-      <div class="prompt" id="p-prompt"></div>
-      <div id="p-lines"></div>
-      <div class="answers" id="p-answers"></div>
-      <div class="hint" id="p-hint"></div>
-      <div class="feedback" id="p-feedback" aria-live="polite"></div>
-      <div class="actions">
-        <button class="ghost-btn" id="p-back">Back to shop</button>
-        <button class="gold-btn" id="p-submit">SUBMIT</button>
+    <div id="shop-game" hidden>
+      <div class="g-head"><b id="g-title"></b><span id="g-hud"></span></div>
+      <p id="g-rules"></p>
+      <div id="g-stage" class="g-stage"></div>
+      <div class="feedback" id="g-msg" aria-live="polite"></div>
+      <div class="g-actions">
+        <button class="ghost-btn" id="g-back">Back to shop</button>
+        <button class="gold-btn" id="g-start">START</button>
       </div>
     </div>
   </div>
@@ -583,6 +690,7 @@
   <div class="modal-body">
     <p class="muted">The Cocos will know you by this name forever. Once it's set, it can never be changed.</p>
     <div class="pledge-quote" id="name-preview"></div>
+    <div class="feedback bad" id="name-msg" aria-live="polite"></div>
     <div class="row">
       <button class="ghost-btn" data-close>Let me fix it</button>
       <button class="gold-btn" id="name-confirm">LOCK IT IN</button>
@@ -599,6 +707,7 @@
   <div class="modal-body">
     <div class="stat-hero"><b id="st-spins">0</b><span>lifetime spins</span></div>
     <div class="stat-grid" id="stat-grid"></div>
+    <p class="muted" id="stats-since" style="text-align:center;margin:14px 0 0"></p>
   </div>
 </dialog>
 
@@ -619,6 +728,53 @@
   </div>
 </dialog>
 
+<!-- Players / friends -->
+<dialog id="players" aria-labelledby="players-title">
+  <div class="modal-head">
+    <h2 id="players-title">Players</h2>
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="tabs" role="tablist">
+      <button class="tab" data-ptab="online" role="tab">Online</button>
+      <button class="tab" data-ptab="all" role="tab">Everyone</button>
+      <button class="tab" data-ptab="friends" role="tab">Friends</button>
+    </div>
+    <input type="text" id="player-search" placeholder="Search by name" autocomplete="off">
+    <div id="player-list" class="plist"></div>
+  </div>
+</dialog>
+
+<!-- Profile -->
+<dialog id="profile" aria-labelledby="profile-title">
+  <div class="modal-head">
+    <h2 id="profile-title">Profile</h2>
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="profile-sub" id="profile-sub"></div>
+    <div class="col-grid" id="profile-cocos"></div>
+    <div class="stat-grid" id="profile-stats" style="margin-top:16px"></div>
+    <div class="row" id="profile-actions"></div>
+  </div>
+</dialog>
+
+<!-- Leaderboard -->
+<dialog id="leader" aria-labelledby="leader-title">
+  <div class="modal-head">
+    <h2 id="leader-title">Leaderboard</h2>
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="tabs" id="lb-cats" role="tablist"></div>
+    <div class="tabs">
+      <button class="tab" data-scope="all">Everyone</button>
+      <button class="tab" data-scope="friends">Friends</button>
+    </div>
+    <div id="lb-list" class="plist"></div>
+  </div>
+</dialog>
+
 <!-- Wrath -->
 <dialog id="wrath" class="wrath" aria-labelledby="wrath-title">
   <div class="wrath-body">
@@ -630,34 +786,12 @@
   </div>
 </dialog>
 
-<script>
-  // Crop boxes are squares in the 799x535 source image: [x, y, size]
-  const IMG_W = 799, IMG_H = 535;
-  const COCOS = [
-    { id: "dj", name: "DJ Coco", crop: [8, 150, 108], weight: 24, rarity: "COMMON",
-      desc: "Headphones on, notifications off. You are locked in and the beat goes on. Today you ship.",
-      power: "Do Not Disturb" },
-    { id: "rodeo", name: "Rodeo Coco", crop: [72, 120, 112], weight: 24, rarity: "COMMON",
-      desc: "Pink hat, big energy. You will wrangle that backlog like a wild stallion. Yeehaw.",
-      power: "Lasso the redlines" },
-    { id: "tundra", name: "Tundra Coco", crop: [162, 105, 115], weight: 24, rarity: "COMMON",
-      desc: "Cool under pressure. Scope creep, surprise deadlines, angry reviewers: none of it rattles you.",
-      power: "Ice-cold focus" },
-    { id: "highroller", name: "High Roller Coco", crop: [335, 92, 132], weight: 8, rarity: "RARE",
-      desc: "You sit on the throne and guard the golden chest. The house always wins, and today you ARE the house.",
-      power: "Double down" },
-    { id: "elder", name: "Elder Coco", crop: [478, 95, 132], weight: 8, rarity: "RARE",
-      desc: "Ancient wisdom flows through the beard. People will come to you with questions, and you will have answers.",
-      power: "Tribal knowledge" },
-    { id: "mystic", name: "Mystic Coco", crop: [622, 88, 140], weight: 8, rarity: "RARE",
-      desc: "The shades see what others cannot. Trust your gut on every design call. The scepter does not lie.",
-      power: "Foresight" },
-    { id: "shadow", name: "Shadow Coco", crop: [592, 322, 128], weight: 4, rarity: "LEGENDARY",
-      desc: "The forbidden Coco. Few have rolled it. Speak little, judge everything, and walk the halls unseen.",
-      power: "Vanish from meetings" },
-  ];
+<script type="module">
+  import { COCOS, cropStyle as cropAt, today, normalizePlayer, publicProfile, ago, DAILY_CAP, EARN_GAP, vaultDay, vaultLeft } from "./cocos.js";
+  import { createStore, isLocal } from "./store.js";
+
   const TOTAL_WEIGHT = COCOS.reduce((s, c) => s + c.weight, 0);
-  const COCO_CHANCE = 0.10; // base chance per spin; the other 90% is a bust
+  const COCO_CHANCE = 0.05; // base chance per spin; the other 95% is a bust
   const SPIN_COST = 1;
   const DAILY_TRIBUTE = 2;
   const chanceOf = c => COCO_CHANCE * c.weight / TOTAL_WEIGHT;
@@ -679,35 +813,27 @@
     ],
   };
 
-  // Coin packs: bigger bag, harder algebra
-  const PACKS = [
-    { coins: 1,   level: 1, label: "Warm-up" },
-    { coins: 5,   level: 2, label: "Two-step" },
-    { coins: 10,  level: 3, label: "Both sides" },
-    { coins: 25,  level: 4, label: "Distribute" },
-    { coins: 50,  level: 5, label: "Systems" },
-    { coins: 100, level: 6, label: "Quadratics" },
+  // Mini-games for earning coins. Each pays up to its `max` depending on how well you play.
+  const WHACK_SECONDS = 25;
+  const GAMES = [
+    { id: "whack", name: "Whack-a-Coco", face: "dj", max: 15,
+      desc: `Cocos pop up for ${WHACK_SECONDS} seconds. Tap as many as you can, but don't touch Shadow Coco (it costs you 3 points).` },
+    { id: "memory", name: "Coco Memory", face: "mystic", max: 5,
+      desc: "Flip cards to match all six pairs of Cocos within a minute. The faster you finish, the more you earn." },
+    { id: "reel", name: "Stop the Reel", face: "highroller", max: 25,
+      desc: "Stop the spinning reel on the target Coco (tap STOP or press the space bar). It speeds up after every hit. Three misses and you're out." },
   ];
   const BOOSTS = [
-    { id: "charm", name: "Lucky Charm", cost: 2, chance: 0.20, spins: 5,
-      desc: "Double Coco chance (20%) for your next 5 spins." },
-    { id: "blessing", name: "Elder's Blessing", cost: 5, chance: 0.30, spins: 10,
-      desc: "Triple Coco chance (30%) for your next 10 spins." },
-    { id: "guarantee", name: "Mystic's Guarantee", cost: 8, chance: 1, spins: 1,
+    { id: "charm", name: "Lucky Charm", cost: 2, chance: COCO_CHANCE * 2, spins: 5,
+      desc: `Double Coco chance (${COCO_CHANCE * 200}%) for your next 5 spins.` },
+    { id: "blessing", name: "Elder's Blessing", cost: 5, chance: COCO_CHANCE * 3, spins: 10,
+      desc: `Triple Coco chance (${COCO_CHANCE * 300}%) for your next 10 spins.` },
+    { id: "guarantee", name: "Mystic's Guarantee", cost: 100, chance: 1, spins: 1,
       desc: "Your next spin is a guaranteed Coco." },
   ];
 
   const $ = id => document.getElementById(id);
-
-  function cropStyle(el, coco) {
-    const [x, y, s] = coco.crop;
-    el.style.backgroundSize = (IMG_W / s * 100) + "% auto";
-    el.style.backgroundPosition = (x / (IMG_W - s) * 100) + "% " + (y / (IMG_H - s) * 100) + "%";
-  }
-  function today() {
-    const d = new Date();
-    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-  }
+  const cropStyle = (el, coco) => cropAt(el, coco.crop);
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
   function roll(chance) {
@@ -718,43 +844,56 @@
     return { coco: choice, lucky };
   }
 
-  // ---------- Save data ----------
-  // Lives in this browser only, keyed by lowercased name:
-  // { coins, counts: { [cocoId]: n }, latest, dry, boosts: [{ name, chance, spins }],
-  //   boostDay: { [boostId]: date }, pledgeDay, pledgeDeclined, stats: {...} }
-  // Bumping the key prefix wipes everyone's progress (v2 = coin economy rollout).
-  const SAVE_KEY = "coco-v2-save";
-  const NAME_KEY = "coco-v2-name";
-  const CURSE_KEY = "coco-v2-curse";
-  try { ["coco-save", "coco-name", "coco-curse"].forEach(k => localStorage.removeItem(k)); } catch (e) {}
-  const STAT_KEYS = ["spins", "cocos", "busts", "longestDry", "coinsEarned", "coinsSpent", "coinsLost",
-    "solved", "missed", "boosts", "tributes", "curses", "atonements"];
-  function loadAll() {
-    try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch (e) { return {}; }
+  // ---------- Player state ----------
+  // The store (Firebase, or local test mode) is the source of truth. `player` is a live copy
+  // kept up to date by watchPlayer, so admin edits show up immediately.
+  // Clear saves from the pre-Firebase versions so everyone starts fresh.
+  try { ["coco-save", "coco-name", "coco-curse", "coco-v2-save", "coco-v2-name", "coco-v2-curse"].forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  let store = null;
+  let player = null;
+  const currentName = () => player?.name || "";
+  const cursedToday = () => player?.cursedDay === today();
+
+  // Apply a change locally right away, then save it. fn must only depend on its argument,
+  // because the database may re-run it against the latest server copy.
+  function mutate(fn) {
+    fn(player);
+    refresh();
+    // Publish once the server has the change, since the rules check the profile against it
+    return store.mutate(fn).then(() => publishProfile()).catch(err => {
+      console.error(err);
+      creditsEl.textContent = "The Cocos could not save that. Check your connection.";
+    });
   }
-  function loadPlayer(name) {
-    const p = loadAll()[name.toLowerCase()] || {};
-    p.coins = p.coins || 0;
-    p.counts = p.counts || {};
-    p.dry = p.dry || 0;
-    p.boosts = p.boosts || [];
-    p.boostDay = p.boostDay || {};
-    p.stats = p.stats || { since: today() };
-    for (const k of STAT_KEYS) p.stats[k] = p.stats[k] || 0;
-    return p;
+
+  // Every coin earned goes through the daily vault, which the database rules also enforce,
+  // along with a minimum gap between earnings. Resolves to how many coins were granted
+  // (less if the vault is nearly empty). onWait(seconds) is called if it has to wait.
+  async function earnCoins(amount, bookkeeping, onWait) {
+    // A couple of seconds behind the server clock, so the rules never see a future timestamp
+    let at = store.serverNow() - 2000;
+    const wait = ((player.earn && player.earn.at) || 0) + EARN_GAP - at;
+    if (wait > 0) {
+      onWait?.(Math.ceil(wait / 1000));
+      await new Promise(r => setTimeout(r, wait + 300));
+      at = store.serverNow() - 2000;
+    }
+    const granted = Math.min(amount, vaultLeft(player, at));
+    if (granted <= 0) return 0;
+    await mutate(p => {
+      const stamp = Math.max(at, ((p.earn && p.earn.at) || 0) + EARN_GAP);
+      const day = vaultDay(stamp);
+      const before = p.earn && p.earn.day === day ? p.earn.today : 0;
+      const add = Math.min(amount, DAILY_CAP - before);
+      if (add <= 0) return;
+      p.coins += add;
+      p.earn = { day, today: before + add, at: stamp };
+      p.stats.coinsEarned += add;
+      bookkeeping?.(p);
+    });
+    return granted;
   }
-  function savePlayer(name, p) {
-    const all = loadAll();
-    all[name.toLowerCase()] = p;
-    try { localStorage.setItem(SAVE_KEY, JSON.stringify(all)); } catch (e) {}
-  }
-  function cursedToday() {
-    try { return localStorage.getItem(CURSE_KEY) === today(); } catch (e) { return false; }
-  }
-  // Once a name is locked in, it can't be changed
-  let lockedName = "";
-  try { lockedName = localStorage.getItem(NAME_KEY) || ""; } catch (e) {}
-  const currentName = () => lockedName;
+  const vaultNow = () => vaultLeft(player, store.serverNow());
 
   // ---------- Reels ----------
   const REELS = 3, STRIP_LEN = 40;
@@ -807,49 +946,50 @@
   // ---------- Spinning ----------
   const nameEl = $("name"), spinBtn = $("spin"), lever = $("lever");
   const resultEl = $("result"), creditsEl = $("credits");
-  if (lockedName) { nameEl.value = lockedName; nameEl.readOnly = true; }
 
   let spinning = false;
   function spin() {
-    if (spinning) return;
+    if (spinning || !player) return;
     const name = currentName();
     if (!name) { askLockName(spin); return; }
-    refresh();
-    if (maybePledge(name)) return;
+    if (maybePledge()) return;
 
-    const player = loadPlayer(name);
     if (player.coins < SPIN_COST) {
       creditsEl.textContent = "You are out of Coco Coins. The shop awaits.";
       openShop();
       return;
     }
 
-    // Pay, then use the strongest active boost
-    player.coins -= SPIN_COST;
+    // Roll against the strongest active boost
     let chance = COCO_CHANCE, boost = null;
     for (const b of player.boosts) if (b.chance > chance) { chance = b.chance; boost = b; }
-    if (boost && --boost.spins <= 0) player.boosts.splice(player.boosts.indexOf(boost), 1);
-
     const fortune = roll(chance);
     const { coco } = fortune;
-    player.dry++;
-    const took = player.dry;
-    const st = player.stats;
-    st.spins++;
-    st.coinsSpent += SPIN_COST;
-    st.longestDry = Math.max(st.longestDry, coco ? took - 1 : took);
-    if (coco) {
-      player.counts[coco.id] = (player.counts[coco.id] || 0) + 1;
-      player.latest = coco.id;
-      player.dry = 0;
-      st.cocos++;
-    } else {
-      st.busts++;
-    }
-    savePlayer(name, player);
-    refresh();
+    const took = player.dry + 1;
+    const wasNew = coco && !player.counts[coco.id];
+    const ownedBefore = COCOS.filter(c => player.counts[c.id]).length;
 
     spinning = true;
+    mutate(p => {
+      p.coins = Math.max(0, p.coins - SPIN_COST);
+      let bi = -1, best = COCO_CHANCE;
+      p.boosts.forEach((b, i) => { if (b.chance > best) { best = b.chance; bi = i; } });
+      if (bi >= 0 && --p.boosts[bi].spins <= 0) p.boosts.splice(bi, 1);
+      p.dry++;
+      const st = p.stats;
+      st.spins++;
+      st.coinsSpent += SPIN_COST;
+      st.longestDry = Math.max(st.longestDry, coco ? p.dry - 1 : p.dry);
+      if (coco) {
+        p.counts[coco.id] = (p.counts[coco.id] || 0) + 1;
+        p.latest = coco.id;
+        p.dry = 0;
+        st.cocos++;
+      } else {
+        st.busts++;
+      }
+    });
+
     spinBtn.disabled = lever.disabled = true;
     lever.classList.add("pulled");
     setTimeout(() => lever.classList.remove("pulled"), 350);
@@ -870,16 +1010,19 @@
     });
 
     setTimeout(() => {
+      spinning = false;
       showResult(name, fortune, took);
-      renderCollection(name);
+      renderCollection();
       if (coco) {
+        // Posted after the reels stop so the feed doesn't spoil the result
+        post({ type: "coco", coco: coco.id });
+        if (wasNew && ownedBefore === COCOS.length - 1) post({ type: "complete" });
         reels.forEach(r => r.reel.classList.add("win"));
         rainCoins(coco.rarity === "LEGENDARY" ? 90 : coco.rarity === "RARE" ? 50 : 30);
         creditsEl.textContent = `JACKPOT! ${coco.name} added to your collection.`;
       } else {
         creditsEl.textContent = player.coins ? "BUST. Pull again." : "BUST. And your pockets are empty. Visit the shop.";
       }
-      spinning = false;
       spinBtn.disabled = lever.disabled = false;
     }, (2.2 + (REELS - 1) * 0.7) * 1000 + 100);
   }
@@ -905,7 +1048,7 @@
       rar.textContent = "BUST";
       rar.className = "rarity bust";
       $("r-desc").textContent = bustLine;
-      $("r-odds").textContent = "9 in 10";
+      $("r-odds").textContent = `${Math.round(1 / COCO_CHANCE) - 1} in ${Math.round(1 / COCO_CHANCE)}`;
       $("r-power").textContent = "Pull again";
       $("r-house").textContent = `${name}, the house is not done with you. ${took} ${took === 1 ? "spin" : "spins"} without a Coco.`;
     }
@@ -918,31 +1061,31 @@
     const name = currentName();
     $("wallet").hidden = !name;
     if (name) {
-      const p = loadPlayer(name);
-      $("coin-count").textContent = p.coins;
-      $("shop-coins").textContent = p.coins;
-      $("boost-status").textContent = p.boosts
+      $("coin-count").textContent = player.coins;
+      $("shop-coins").textContent = player.coins;
+      $("boost-status").textContent = player.boosts
         .map(b => `${b.name}: ${Math.round(b.chance * 100)}% chance, ${b.spins} ${b.spins === 1 ? "spin" : "spins"} left`)
         .join(" · ");
     } else {
       $("boost-status").textContent = "";
     }
-    renderCollection(name);
+    if (!spinning) renderCollection(); // don't spoil the result before the reels stop
+    if (shop.open && !$("shop-main").hidden) renderShop();
     applyCurse();
   }
 
-  function renderCollection(name) {
+  function renderCollection() {
     const section = $("collection");
+    const name = currentName();
     if (!name) { section.hidden = true; return; }
-    const p = loadPlayer(name);
     const grid = $("col-grid");
     grid.innerHTML = "";
     let owned = 0;
     for (const c of COCOS) {
-      const n = p.counts[c.id] || 0;
+      const n = player.counts[c.id] || 0;
       if (n) owned++;
       const item = document.createElement("div");
-      item.className = "col-item" + (n ? "" : " locked") + (p.latest === c.id ? " latest" : "");
+      item.className = "col-item" + (n ? "" : " locked") + (player.latest === c.id ? " latest" : "");
       const t = document.createElement("div");
       t.className = "tile"; cropStyle(t, c);
       item.appendChild(t);
@@ -957,7 +1100,7 @@
   function applyCurse() {
     const cursed = cursedToday();
     document.body.classList.toggle("cursed", cursed);
-    $("atone-open").hidden = !cursed || !lockedName;
+    $("atone-open").hidden = !cursed || !currentName();
     $("title").textContent = cursed ? "The Cocos Are Angry" : TITLE;
     $("tagline").textContent = cursed ? "You spoke ill of Colton. The gods remember." : TAGLINE;
     if (cursed && !$("drips").childElementCount) {
@@ -988,116 +1131,40 @@
     }
   }
 
-  // ---------- Algebra ----------
-  const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
-  const nz = (a, b) => { let v; do v = ri(a, b); while (v === 0); return v; };
-  const num = n => (n < 0 ? "−" + -n : "" + n);
-  // terms: [[coef, "x²" | "x" | "y" | ""]]
-  function fmt(terms) {
-    let s = "";
-    for (const [c, v] of terms) {
-      if (c === 0) continue;
-      const abs = Math.abs(c);
-      const body = (abs === 1 && v ? "" : abs) + v;
-      s += s ? (c < 0 ? " − " : " + ") + body : (c < 0 ? "−" : "") + body;
-    }
-    return s || "0";
-  }
-  const gcd = (a, b) => (b ? gcd(b, a % b) : Math.abs(a));
-  function frac(n, d) {
-    if (d < 0) { n = -n; d = -d; }
-    const g = gcd(n, d);
-    n /= g; d /= g;
-    return d === 1 ? num(n) : `${num(n)}/${d}`;
-  }
-  const ans = (label, val, text) => ({ label, val, text: text ?? num(val) });
-
-  function makeProblem(level) {
-    if (level === 1) { // x ± a = b
-      const x = ri(1, 20), a = nz(-15, 15);
-      return { lines: [`${fmt([[1, "x"], [a, ""]])} = ${num(x + a)}`], answers: [ans("x", x)] };
-    }
-    if (level === 2) { // ax + b = c
-      const a = nz(-9, 9), x = ri(-10, 10), b = nz(-20, 20);
-      if (Math.abs(a) === 1) return makeProblem(2);
-      return { lines: [`${fmt([[a, "x"], [b, ""]])} = ${num(a * x + b)}`], answers: [ans("x", x)] };
-    }
-    if (level === 3) { // ax + b = cx + d
-      const a = nz(-9, 9), c = nz(-9, 9), x = ri(-12, 12), b = ri(-20, 20);
-      if (a === c) return makeProblem(3);
-      const d = a * x + b - c * x;
-      return { lines: [`${fmt([[a, "x"], [b, ""]])} = ${fmt([[c, "x"], [d, ""]])}`], answers: [ans("x", x)] };
-    }
-    if (level === 4) { // a(x + b) = c(x + d) + e
-      const a = ri(2, 9), c = ri(2, 9), b = nz(-9, 9), d = nz(-9, 9), x = ri(-10, 10);
-      if (a === c) return makeProblem(4);
-      const e = a * (x + b) - c * (x + d);
-      const tail = e === 0 ? "" : e < 0 ? ` − ${-e}` : ` + ${e}`;
-      return { lines: [`${a}(${fmt([[1, "x"], [b, ""]])}) = ${c}(${fmt([[1, "x"], [d, ""]])})${tail}`], answers: [ans("x", x)] };
-    }
-    if (level === 5) { // 2x2 system
-      const x = ri(-9, 9), y = ri(-9, 9);
-      const a = nz(-7, 7), b = nz(-7, 7), c = nz(-7, 7), d = nz(-7, 7);
-      if (a * d - b * c === 0) return makeProblem(5);
-      return {
-        prompt: "Solve for x and y",
-        lines: [`${fmt([[a, "x"], [b, "y"]])} = ${num(a * x + b * y)}`, `${fmt([[c, "x"], [d, "y"]])} = ${num(c * x + d * y)}`],
-        answers: [ans("x", x), ans("y", y)],
-      };
-    }
-    // level 6: (px − q)(x − r) = 0 expanded, one fractional root
-    const p = ri(2, 5), r = nz(-9, 9);
-    let q; do q = nz(-12, 12); while (q % p === 0);
-    return {
-      prompt: "Find both solutions for x",
-      lines: [`${fmt([[p, "x²"], [-(p * r + q), "x"], [q * r, ""]])} = 0`],
-      answers: [ans("x", q / p, frac(q, p)), ans("x", r)],
-      unordered: true,
-      hint: "Fractions like −3/2 are fine. Order does not matter.",
-    };
-  }
-  function parseNum(s) {
-    s = s.replace(/[−–]/g, "-").replace(/\s+/g, "");
-    if (!s) return NaN;
-    const m = s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);
-    if (m) return Number(m[2]) === 0 ? NaN : Number(m[1]) / Number(m[2]);
-    return /^-?\d*\.?\d+$/.test(s) ? Number(s) : NaN;
-  }
-  const close = (a, b) => Math.abs(a - b) < 1e-6;
-  function checkAnswers(problem, vals) {
-    const want = problem.answers.map(a => a.val);
-    if (problem.unordered) return (close(vals[0], want[0]) && close(vals[1], want[1])) || (close(vals[0], want[1]) && close(vals[1], want[0]));
-    return want.every((w, i) => close(vals[i], w));
-  }
-
   // ---------- Shop ----------
   const shop = $("shop");
-  let activePack = null, activeProblem = null;
-
-  for (const pack of PACKS) {
-    const b = document.createElement("button");
-    b.className = "pack";
-    b.innerHTML = `<b><span class="coin-icon"></span>${pack.coins}</b><span>${pack.label}</span>` +
-      `<div class="diff" aria-label="Difficulty ${pack.level} of 6">${[1,2,3,4,5,6].map(i => `<i class="${i <= pack.level ? "on" : ""}"></i>`).join("")}</div>`;
-    b.addEventListener("click", () => startProblem(pack));
-    $("packs").appendChild(b);
-  }
 
   function openShop() {
-    const name = currentName();
-    if (!name) { nameEl.focus(); creditsEl.textContent = "Tell the house your name before shopping."; return; }
+    if (!currentName()) { nameEl.focus(); creditsEl.textContent = "Tell the house your name before shopping."; return; }
     showShopMain();
     if (!shop.open) shop.showModal();
   }
   function showShopMain() {
+    stopGame();
     $("shop-main").hidden = false;
-    $("shop-problem").hidden = true;
+    $("shop-game").hidden = true;
     renderShop();
   }
   function renderShop() {
-    const name = currentName();
-    const p = loadPlayer(name);
-    refresh();
+    const p = player;
+    $("shop-coins").textContent = p.coins;
+    const left = vaultNow();
+    $("vault-fill").style.width = (left / DAILY_CAP * 100) + "%";
+    $("vault-text").textContent = left ? `Vault: ${left}/${DAILY_CAP} coins left today` : "The vault is empty until tomorrow";
+    const list0 = $("games");
+    list0.innerHTML = "";
+    for (const g of GAMES) {
+      const card = el("div", "game-card");
+      const face = el("div", "face");
+      cropStyle(face, COCOS.find(c => c.id === g.face));
+      card.appendChild(face);
+      const info = el("div", "info");
+      info.appendChild(el("strong", null, g.name));
+      info.appendChild(el("span", null, `Up to ${g.max} coins` + (p.best[g.id] ? ` · Your best: ${p.best[g.id]}` : "")));
+      card.appendChild(info);
+      card.appendChild(btn("gold-btn", "PLAY", () => openGame(g)));
+      list0.appendChild(card);
+    }
     const list = $("boosts");
     list.innerHTML = "";
     for (const b of BOOSTS) {
@@ -1126,82 +1193,261 @@
     }
   }
   function buyBoost(b) {
-    const name = currentName();
-    const p = loadPlayer(name);
-    if (p.coins < b.cost || p.boostDay[b.id] === today()) return;
-    p.coins -= b.cost;
-    p.stats.coinsSpent += b.cost;
-    p.stats.boosts++;
-    p.boostDay[b.id] = today();
-    p.boosts.push({ name: b.name, chance: b.chance, spins: b.spins });
-    savePlayer(name, p);
-    renderShop();
+    if (player.coins < b.cost || player.boostDay[b.id] === today()) return;
+    mutate(p => {
+      if (p.coins < b.cost || p.boostDay[b.id] === today()) return;
+      p.coins -= b.cost;
+      p.stats.coinsSpent += b.cost;
+      p.stats.boosts++;
+      p.boostDay[b.id] = today();
+      p.boosts.push({ name: b.name, chance: b.chance, spins: b.spins });
+    });
     creditsEl.textContent = `${b.name} activated.`;
   }
 
-  function startProblem(pack) {
-    activePack = pack;
-    activeProblem = makeProblem(pack.level);
+  // ---------- Mini-games ----------
+  let game = null, activeGame = null;
+  const shuffle = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const hud = text => { $("g-hud").textContent = text; };
+
+  function openGame(def) {
+    stopGame();
+    activeGame = def;
     $("shop-main").hidden = true;
-    $("shop-problem").hidden = false;
-    $("p-feedback").textContent = "";
-    $("p-feedback").className = "feedback";
-    renderProblem();
+    $("shop-game").hidden = false;
+    $("g-title").textContent = def.name;
+    $("g-rules").textContent = def.desc + (vaultNow() ? "" : " The vault is empty for today, so this round is just for fun.");
+    hud("");
+    $("g-msg").textContent = "";
+    $("g-msg").className = "feedback";
+    $("g-stage").innerHTML = "";
+    $("g-stage").className = "g-stage";
+    $("g-start").hidden = false;
+    $("g-start").textContent = "START";
+    $("g-start").focus();
   }
-  function renderProblem() {
-    const pr = activeProblem;
-    $("p-prompt").textContent = `${pr.prompt || "Solve for x"} to earn ${activePack.coins} Coco ${activePack.coins === 1 ? "Coin" : "Coins"}`;
-    $("p-lines").innerHTML = "";
-    for (const line of pr.lines) {
-      const d = document.createElement("div");
-      d.className = "eq";
-      d.textContent = line;
-      $("p-lines").appendChild(d);
-    }
-    $("p-answers").innerHTML = "";
-    pr.answers.forEach(a => {
-      const l = document.createElement("label");
-      l.innerHTML = `<span>${a.label} =</span><input type="text" inputmode="decimal" autocomplete="off">`;
-      $("p-answers").appendChild(l);
-    });
-    $("p-hint").textContent = pr.hint || "";
-    $("p-answers").querySelector("input").focus();
+  function stopGame() {
+    game?.stop();
+    game = null;
   }
-  function submitProblem() {
-    const inputs = [...$("p-answers").querySelectorAll("input")];
-    const vals = inputs.map(i => parseNum(i.value));
-    const fb = $("p-feedback");
-    if (vals.some(isNaN)) {
-      fb.textContent = "The Cocos only accept numbers.";
-      fb.className = "feedback bad";
-      return;
-    }
-    const name = currentName();
-    const p = loadPlayer(name);
-    if (checkAnswers(activeProblem, vals)) {
-      p.coins += activePack.coins;
-      p.stats.coinsEarned += activePack.coins;
-      p.stats.solved++;
-      savePlayer(name, p);
-      refresh();
-      rainCoins(Math.min(15 + activePack.coins, 90));
-      fb.textContent = `Correct! +${activePack.coins} Coco ${activePack.coins === 1 ? "Coin" : "Coins"}. Here's another if you want more.`;
-      fb.className = "feedback good";
+  $("g-start").addEventListener("click", () => {
+    $("g-start").hidden = true;
+    $("g-msg").textContent = "";
+    $("g-msg").className = "feedback";
+    $("g-stage").innerHTML = "";
+    $("g-stage").className = "g-stage g-" + activeGame.id;
+    game = { whack: whackGame, memory: memoryGame, reel: reelGame }[activeGame.id](finishGame);
+  });
+  $("g-back").addEventListener("click", showShopMain);
+  shop.addEventListener("close", stopGame);
+
+  async function finishGame(score, coins, summary) {
+    game = null;
+    const id = activeGame.id;
+    coins = Math.max(0, Math.min(activeGame.max, Math.floor(coins)));
+    const book = p => {
+      p.stats.games++;
+      if (score > (p.best[id] || 0)) p.best[id] = score;
+    };
+    const msg = $("g-msg");
+    msg.className = "feedback good";
+    $("g-start").textContent = "PLAY AGAIN";
+    if (coins > 0 && vaultNow() > 0) {
+      msg.textContent = `${summary} Depositing ${coins} coins...`;
+      const got = await earnCoins(coins, book, secs => { msg.textContent = `${summary} The vault opens in ${secs}s...`; });
+      msg.textContent = got
+        ? `${summary} +${got} Coco ${got === 1 ? "Coin" : "Coins"}!` + (got < coins ? " That emptied today's vault." : "")
+        : `${summary} The vault is empty for today.`;
+      if (got) rainCoins(Math.min(15 + got * 2, 70));
     } else {
-      p.stats.missed++;
-      savePlayer(name, p);
-      const answer = activeProblem.answers.map(a => `${a.label} = ${a.text}`).join(", ");
-      fb.textContent = `Wrong. The answer was ${answer}. Try this one instead.`;
-      fb.className = "feedback bad";
+      mutate(book);
+      msg.textContent = coins ? `${summary} The vault is empty until tomorrow, so no coins this time.` : `${summary} No coins this round. Try again!`;
+      if (!coins) msg.className = "feedback bad";
     }
-    activeProblem = makeProblem(activePack.level);
-    const keep = fb.textContent, cls = fb.className;
-    renderProblem();
-    fb.textContent = keep; fb.className = cls;
+    $("g-start").hidden = false;
   }
-  $("p-submit").addEventListener("click", submitProblem);
-  $("p-answers").addEventListener("keydown", e => { if (e.key === "Enter") submitProblem(); });
-  $("p-back").addEventListener("click", showShopMain);
+
+  // Whack-a-Coco: tap regular Cocos (+1), avoid Shadow Coco (−3)
+  function whackGame(done) {
+    const DURATION = WHACK_SECONDS * 1000, stage = $("g-stage"), start = performance.now();
+    const shadow = COCOS.find(c => c.id === "shadow"), regulars = COCOS.filter(c => c !== shadow);
+    let score = 0, over = false, spawnTimer = null;
+    const holes = [];
+    for (let i = 0; i < 9; i++) {
+      const h = { el: el("button", "hole"), coco: null, timer: null };
+      h.el.setAttribute("aria-label", "Hole " + (i + 1));
+      h.el.addEventListener("pointerdown", e => { e.preventDefault(); whack(h); });
+      stage.appendChild(h.el);
+      holes.push(h);
+    }
+    const progress = () => Math.min(1, (performance.now() - start) / DURATION);
+    const showHud = () => hud(`Score ${score} · ${Math.ceil((1 - progress()) * DURATION / 1000)}s`);
+    function hide(h) {
+      clearTimeout(h.timer);
+      h.coco = null;
+      h.el.className = "hole";
+    }
+    function pop() {
+      if (over) return;
+      const t = progress();
+      const free = holes.filter(h => !h.coco && h.el.className === "hole");
+      if (free.length) {
+        const h = pick(free);
+        h.coco = Math.random() < 0.2 ? shadow : pick(regulars);
+        cropStyle(h.el, h.coco);
+        h.el.className = "hole up" + (h.coco === shadow ? " shadow" : "");
+        h.timer = setTimeout(() => hide(h), 1050 - 450 * t);
+      }
+      spawnTimer = setTimeout(pop, 650 - 280 * t);
+    }
+    function whack(h) {
+      if (over || !h.coco) return;
+      const bad = h.coco === shadow;
+      score = bad ? Math.max(0, score - 3) : score + 1;
+      clearTimeout(h.timer);
+      h.coco = null;
+      h.el.classList.add(bad ? "bad" : "hit");
+      h.timer = setTimeout(() => hide(h), 160);
+      showHud();
+    }
+    const clock = setInterval(() => {
+      showHud();
+      if (progress() >= 1) end();
+    }, 100);
+    function stop() {
+      over = true;
+      clearInterval(clock);
+      clearTimeout(spawnTimer);
+      holes.forEach(hide);
+    }
+    function end() {
+      stop();
+      hud(`Score ${score}`);
+      done(score, score * 0.4, `Time! You whacked ${score} ${score === 1 ? "point" : "points"}.`);
+    }
+    showHud();
+    pop();
+    return { stop };
+  }
+
+  // Coco Memory: match 6 pairs within 60 seconds; faster finishes pay more
+  function memoryGame(done) {
+    const DURATION = 60000, stage = $("g-stage"), start = performance.now();
+    const deck = shuffle([...shuffle(COCOS).slice(0, 6)].flatMap(c => [c, c]));
+    let first = null, lock = false, matched = 0, over = false;
+    const secsLeft = () => Math.max(0, Math.ceil((DURATION - (performance.now() - start)) / 1000));
+    const showHud = () => hud(`Pairs ${matched}/6 · ${secsLeft()}s`);
+    const cards = deck.map(coco => {
+      const c = { coco, el: el("button", "card", "?"), done: false };
+      c.el.setAttribute("aria-label", "Card");
+      c.el.addEventListener("click", () => flip(c));
+      stage.appendChild(c.el);
+      return c;
+    });
+    function flip(c) {
+      if (over || lock || c.done || c === first) return;
+      cropStyle(c.el, c.coco);
+      c.el.classList.add("up");
+      if (!first) { first = c; return; }
+      if (first.coco === c.coco) {
+        first.done = c.done = true;
+        first.el.classList.add("done");
+        c.el.classList.add("done");
+        first = null;
+        matched++;
+        showHud();
+        if (matched === 6) end();
+      } else {
+        lock = true;
+        const a = first;
+        setTimeout(() => { a.el.classList.remove("up"); c.el.classList.remove("up"); first = null; lock = false; }, 650);
+      }
+    }
+    const clock = setInterval(() => {
+      showHud();
+      if (secsLeft() <= 0) end();
+    }, 200);
+    function stop() {
+      over = true;
+      clearInterval(clock);
+    }
+    function end() {
+      if (over) return;
+      stop();
+      const left = matched === 6 ? secsLeft() : 0;
+      const score = matched * 10 + left * 2;
+      cards.forEach(c => { cropStyle(c.el, c.coco); c.el.classList.add("up"); });
+      hud(`Score ${score}`);
+      done(score, score / 30, matched === 6 ? `All pairs with ${left}s to spare! Score ${score}.` : `Out of time with ${matched}/6 pairs. Score ${score}.`);
+    }
+    showHud();
+    return { stop };
+  }
+
+  // Stop the Reel: stop on the target Coco; speeds up after each hit; 3 misses ends it
+  function reelGame(done) {
+    const stage = $("g-stage"), order = shuffle(COCOS), MAX_HITS = 13;
+    let idx = 0, speed = 340, hits = 0, lives = 3, paused = false, over = false, ticker = null, target = null;
+    const targetRow = el("div", "reel-target");
+    targetRow.appendChild(el("span", null, "Stop on:"));
+    const targetFace = el("div", "face");
+    targetRow.appendChild(targetFace);
+    const targetName = el("b");
+    targetRow.appendChild(targetName);
+    const win = el("div", "reel-window");
+    const stopBtn = el("button", "gold-btn reel-stop", "STOP");
+    stopBtn.addEventListener("click", press);
+    stage.append(targetRow, win, stopBtn);
+    const showHud = () => hud(`Hits ${hits} · ${"♥".repeat(lives)}${"♡".repeat(3 - lives)}`);
+    function newTarget() {
+      target = pick(COCOS.filter(c => c !== target));
+      cropStyle(targetFace, target);
+      targetName.textContent = target.name;
+    }
+    function tick() {
+      idx = (idx + 1) % order.length;
+      cropStyle(win, order[idx]);
+    }
+    function run() {
+      clearInterval(ticker);
+      ticker = setInterval(tick, speed);
+    }
+    function press() {
+      if (over || paused) return;
+      paused = true;
+      clearInterval(ticker);
+      const good = order[idx] === target;
+      if (good) { hits++; speed = Math.max(85, speed * 0.86); } else lives--;
+      win.classList.add(good ? "good" : "bad");
+      showHud();
+      setTimeout(() => {
+        win.classList.remove("good", "bad");
+        if (lives <= 0 || hits >= MAX_HITS) return end();
+        if (good) newTarget();
+        paused = false;
+        run();
+      }, 650);
+    }
+    const onKey = e => { if (e.code === "Space" && !$("shop-game").hidden) { e.preventDefault(); press(); } };
+    document.addEventListener("keydown", onKey);
+    function stop() {
+      over = true;
+      clearInterval(ticker);
+      document.removeEventListener("keydown", onKey);
+    }
+    function end() {
+      stop();
+      hud(`Hits ${hits}`);
+      done(hits, hits * 2, hits >= MAX_HITS ? `Perfect run! ${hits} hits.` : `Out of lives with ${hits} ${hits === 1 ? "hit" : "hits"}.`);
+    }
+    newTarget();
+    cropStyle(win, order[0]);
+    showHud();
+    run();
+    stopBtn.focus();
+    return { stop };
+  }
+
   $("shop-open").addEventListener("click", openShop);
   $("tribute-btn").addEventListener("click", () => openPledge());
 
@@ -1211,9 +1457,9 @@
   const MEAN = /\b(lamest|lame|lamer|worst|worse|dumbest|dumb|stupid|stupidest|smelliest|stinkiest|stinky|stinks|ugliest|ugly|meanest|mean|weakest|saddest|uncoolest|uncool|sucks|suck|sux|terrible|awful|bad|horrible|hate|loser|lousiest|lousy|boring|boringest|crappiest|crappy|crap|trash|garbage|cringe|cringiest|idiot|jerk|least|lazy|laziest|annoying|grossest|gross|meh|mid|okay|ok|fine|average|mediocre)\b|not the coolest|not cool/;
   const normalize = s => s.toLowerCase().replace(/[^a-z\s]/g, " ").replace(/\s+/g, " ").trim();
 
-  function maybePledge(name) {
-    const p = loadPlayer(name);
-    if (cursedToday() || p.pledgeDay === today() || p.pledgeDeclined === today()) return false;
+  function maybePledge() {
+    const p = player;
+    if (!currentName() || cursedToday() || p.pledgeDay === today() || p.pledgeDeclined === today()) return false;
     openPledge();
     return true;
   }
@@ -1222,53 +1468,53 @@
     $("pledge-input").value = "";
     $("pledge-msg").textContent = "";
     if (shop.open) shop.close();
-    pledge.showModal();
+    if (!pledge.open) pledge.showModal();
     $("pledge-input").focus();
   }
   function declinePledge() {
-    const name = currentName();
-    const p = loadPlayer(name);
-    if (p.pledgeDay !== today()) { p.pledgeDeclined = today(); savePlayer(name, p); }
+    if (player.pledgeDay !== today()) mutate(p => { if (p.pledgeDay !== today()) p.pledgeDeclined = today(); });
     if (pledge.open) pledge.close();
     creditsEl.textContent = "Suit yourself. Each spin costs 1 Coco Coin.";
   }
   function claimPledge() {
     const text = normalize($("pledge-input").value);
-    const name = currentName();
-    const p = loadPlayer(name);
     if (text === PLEDGE_TEXT) {
-      p.coins += DAILY_TRIBUTE;
-      p.stats.coinsEarned += DAILY_TRIBUTE;
-      p.stats.tributes++;
-      p.pledgeDay = today();
-      savePlayer(name, p);
+      if (player.pledgeDay === today()) { pledge.close(); return; }
       pledge.close();
-      refresh();
-      rainCoins(25);
-      creditsEl.textContent = `+${DAILY_TRIBUTE} Coco Coins. The Cocos are pleased. Pull the lever.`;
+      mutate(p => { p.pledgeDay = today(); });
+      creditsEl.textContent = "The Cocos are pleased. Depositing your tribute...";
+      earnCoins(DAILY_TRIBUTE, p => { p.stats.tributes++; }, secs => {
+        creditsEl.textContent = `The Cocos are pleased. Your tribute arrives in ${secs}s...`;
+      }).then(got => {
+        if (got) rainCoins(25);
+        creditsEl.textContent = got
+          ? `+${got} Coco ${got === 1 ? "Coin" : "Coins"}. The Cocos are pleased. Pull the lever.`
+          : "The Cocos are pleased, but today's vault is already empty.";
+      });
     } else if (MEAN.test(text)) {
-      unleashWrath(name, p);
+      unleashWrath();
     } else {
       $("pledge-msg").textContent = "The Cocos require the exact words.";
       const input = $("pledge-input");
       input.classList.remove("shake"); input.offsetWidth; input.classList.add("shake");
     }
   }
-  function unleashWrath(name, p) {
-    const lost = p.coins;
-    p.coins = 0;
-    p.stats.coinsLost += lost;
-    p.stats.curses++;
-    p.pledgeDay = today();
-    savePlayer(name, p);
-    try { localStorage.setItem(CURSE_KEY, today()); } catch (e) {}
+  function unleashWrath() {
+    const lost = player.coins;
+    mutate(p => {
+      p.stats.coinsLost += p.coins;
+      p.coins = 0;
+      p.stats.curses++;
+      p.pledgeDay = today();
+      p.cursedDay = today();
+    });
     pledge.close();
     $("wrath-text").innerHTML = lost
       ? `For speaking ill of Colton, the coolest boss ever, you have been relieved of your remaining <b>${lost} Coco ${lost === 1 ? "Coin" : "Coins"}</b>.`
       : `For speaking ill of Colton, the coolest boss ever, you would be relieved of your Coco Coins. <b>But you have none.</b> The Cocos find this pathetic.`;
     $("wrath").showModal();
-    refresh();
     creditsEl.textContent = "The Cocos are watching you.";
+    post({ type: "curse" });
   }
   $("pledge-claim").addEventListener("click", claimPledge);
   $("pledge-input").addEventListener("keydown", e => { if (e.key === "Enter") claimPledge(); });
@@ -1294,23 +1540,38 @@
     }
     afterLock = next;
     $("name-preview").textContent = typed;
+    $("name-msg").textContent = "";
     $("name-dialog").showModal();
   }
-  $("name-confirm").addEventListener("click", () => {
-    lockedName = $("name-preview").textContent;
-    try { localStorage.setItem(NAME_KEY, lockedName); } catch (e) {}
-    nameEl.value = lockedName;
-    nameEl.readOnly = true;
+  $("name-confirm").addEventListener("click", async () => {
+    const name = $("name-preview").textContent;
+    const btn = $("name-confirm");
+    btn.disabled = true;
+    let ok = false;
+    try { ok = await store.claimName(name); } catch (e) { console.error(e); }
+    btn.disabled = false;
+    if (!ok) {
+      $("name-msg").textContent = "Another player already claimed that name. Pick a different one.";
+      return;
+    }
+    player.name = name;
+    syncName();
+    publishProfile();
+    post({ type: "join" });
     $("name-dialog").close();
-    creditsEl.textContent = `Welcome, ${lockedName}. Each spin costs 1 Coco Coin.`;
+    creditsEl.textContent = `Welcome, ${name}. Each spin costs 1 Coco Coin.`;
     refresh();
     if (afterLock) afterLock();
     afterLock = null;
   });
+  function syncName() {
+    if (player?.name) { nameEl.value = player.name; nameEl.readOnly = true; }
+    else nameEl.readOnly = false;
+  }
 
   // ---------- Stats ----------
   function openStats() {
-    const p = loadPlayer(currentName());
+    const p = player;
     const s = p.stats;
     const rarest = [...COCOS].reverse().find(c => p.counts[c.id]);
     const since = new Date(s.since + "T00:00").toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
@@ -1321,12 +1582,11 @@
       [s.spins ? (s.cocos / s.spins * 100).toFixed(1) + "%" : "—", "Hit rate"],
       [s.longestDry, "Longest drought"],
       [rarest ? rarest.name : "—", "Rarest find"],
-      [Object.keys(p.counts).length + "/" + COCOS.length, "Collection"],
+      [COCOS.filter(c => p.counts[c.id]).length + "/" + COCOS.length, "Collection"],
       [s.coinsEarned, "Coins earned"],
       [s.coinsSpent, "Coins spent"],
       [s.coinsLost, "Coins lost to the gods"],
-      [s.solved, "Problems solved"],
-      [s.missed, "Problems missed"],
+      [s.games, "Mini-games played"],
       [s.boosts, "Boosts bought"],
       [s.tributes, "Tributes paid"],
       [s.curses, "Times cursed"],
@@ -1342,8 +1602,7 @@
       $("stat-grid").appendChild(d);
     }
     $("stats-title").textContent = `${currentName()}'s Stats`;
-    $("stats").querySelector(".muted")?.remove();
-    $("stat-grid").insertAdjacentHTML("afterend", `<p class="muted" style="text-align:center;margin:14px 0 0">Playing since ${since}</p>`);
+    $("stats-since").textContent = `Playing since ${since}`;
     $("stats").showModal();
   }
   $("stats-open").addEventListener("click", openStats);
@@ -1384,27 +1643,331 @@
   $("atone-open").addEventListener("click", openAtone);
   $("atone-submit").addEventListener("click", () => {
     if (!atoneChecks($("atone-text").value).every(c => c[0])) return;
-    const name = currentName();
-    const p = loadPlayer(name);
-    p.stats.atonements++;
-    savePlayer(name, p);
-    try { localStorage.removeItem(CURSE_KEY); } catch (e) {}
+    mutate(p => { p.stats.atonements++; delete p.cursedDay; });
     $("atone").close();
     $("atone-text").value = "";
-    refresh();
     rainCoins(60);
     creditsEl.textContent = "The Cocos have heard your words. The curse is lifted. Do not test them again.";
+    post({ type: "atone" });
   });
 
-  // ---------- Wiring ----------
+  // ---------- Social ----------
+  let others = {}, statuses = {}, friends = {}, feedItems = [];
+  let lastPublished = null;
+  const isOn = uid => !!statuses[uid]?.online;
+  const named = () => Object.entries(others).filter(([, p]) => p && p.name);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const btn = (cls, text, fn) => { const b = el("button", cls, text); b.addEventListener("click", e => { e.stopPropagation(); fn(); }); return b; };
+
+  // Keep my public profile (what other players see) in step with my record
+  let publishRetry = null, publishFails = 0;
+  function publishProfile() {
+    if (!player?.name) return;
+    const prof = JSON.parse(JSON.stringify(publicProfile(player)));
+    const key = JSON.stringify(prof);
+    if (key === lastPublished) return;
+    lastPublished = key;
+    store.publish(prof).then(() => { publishFails = 0; }).catch(err => {
+      // Usually the server hasn't confirmed the latest save yet; try again shortly
+      if (lastPublished === key) lastPublished = null;
+      clearTimeout(publishRetry);
+      if (++publishFails <= 5) publishRetry = setTimeout(publishProfile, 1500);
+      else console.warn("Profile could not be published:", err.message);
+    });
+  }
+  function post(event) {
+    if (!currentName()) return;
+    store.postFeed({ ...event, name: currentName() }).catch(err => console.warn("Feed post failed:", err.message));
+  }
+
+  function renderSocial() {
+    const online = named().filter(([uid]) => isOn(uid)).length;
+    $("online-pill").hidden = false;
+    $("online-count").textContent = `${online} ${online === 1 ? "player" : "players"} online`;
+    $("social").hidden = !currentName();
+    const reqs = Object.values(friends).filter(v => v === "incoming").length;
+    $("req-count").hidden = !reqs;
+    $("req-count").textContent = reqs;
+    if ($("players").open) renderPlayers();
+    if ($("profile").open) renderProfile();
+    if ($("leader").open) renderLeader();
+  }
+
+  function miniFaces(counts) {
+    const d = el("div", "mini");
+    for (const c of COCOS) {
+      const n = (counts || {})[c.id] || 0;
+      const f = el("div", "face" + (n ? "" : " off"));
+      f.title = `${c.name}: ${n}`;
+      cropStyle(f, c);
+      d.appendChild(f);
+    }
+    return d;
+  }
+
+  async function friendAction(uid, remove) {
+    const state = friends[uid];
+    try {
+      if (remove || state === "outgoing") await store.friendRemove(uid);
+      else if (state === "incoming") await store.friendAccept(uid);
+      else if (!state) await store.friendRequest(uid);
+    } catch (e) { console.error(e); }
+  }
+  function friendButton(uid) {
+    if (!currentName() || uid === store.uid) return null;
+    const state = friends[uid];
+    const label = { incoming: "Accept", outgoing: "Requested", accepted: "Friends ✓" }[state] || "Add friend";
+    const b = btn(state && state !== "incoming" ? "ghost-btn" : "gold-btn", label, () => friendAction(uid));
+    if (state === "outgoing") b.title = "Click to cancel the request";
+    if (state === "accepted") b.disabled = true;
+    return b;
+  }
+
+  // Players / friends list
+  let ptab = "all";
+  function openPlayers(tab) {
+    ptab = tab;
+    $("player-search").value = "";
+    renderPlayers();
+    if (!$("players").open) $("players").showModal();
+  }
+  function playerRow(uid, p, extras) {
+    const row = el("div", "prow" + (uid === store.uid ? " me" : ""));
+    row.appendChild(el("span", "dot" + (isOn(uid) ? " on" : "")));
+    const pn = el("div", "pn");
+    pn.appendChild(el("b", null, p.name + (uid === store.uid ? " (you)" : "")));
+    pn.appendChild(el("small", null, isOn(uid) ? "Online now" : "Seen " + ago(statuses[uid]?.lastChanged)));
+    row.appendChild(pn);
+    row.appendChild(miniFaces(p.counts));
+    for (const x of extras || [friendButton(uid)]) if (x) row.appendChild(x);
+    row.addEventListener("click", () => openProfile(uid));
+    return row;
+  }
+  function renderPlayers() {
+    document.querySelectorAll("[data-ptab]").forEach(t => t.classList.toggle("active", t.dataset.ptab === ptab));
+    const q = $("player-search").value.trim().toLowerCase();
+    const list = $("player-list");
+    list.innerHTML = "";
+    let rows = named().filter(([, p]) => !q || p.name.toLowerCase().includes(q));
+    rows.sort((a, b) => (isOn(b[0]) - isOn(a[0])) || a[1].name.localeCompare(b[1].name));
+    const label = t => list.appendChild(el("div", "section-label", t));
+    const empty = t => list.appendChild(el("div", "empty-note", t));
+    if (ptab === "online") {
+      rows = rows.filter(([u]) => isOn(u));
+      if (!rows.length) empty("Nobody is here right now.");
+      rows.forEach(([u, p]) => list.appendChild(playerRow(u, p)));
+    } else if (ptab === "all") {
+      if (!rows.length) empty(q ? "Nobody by that name." : "No players yet.");
+      rows.forEach(([u, p]) => list.appendChild(playerRow(u, p)));
+    } else {
+      if (!currentName()) { empty("Lock in your name to make friends."); return; }
+      const by = s => rows.filter(([u]) => friends[u] === s);
+      const incoming = by("incoming"), outgoing = by("outgoing"), accepted = by("accepted");
+      if (incoming.length) {
+        label("Friend requests");
+        incoming.forEach(([u, p]) => list.appendChild(playerRow(u, p, [friendButton(u), btn("ghost-btn", "Decline", () => friendAction(u, true))])));
+      }
+      if (outgoing.length) {
+        label("Waiting on them");
+        outgoing.forEach(([u, p]) => list.appendChild(playerRow(u, p)));
+      }
+      label(`Friends (${accepted.length})`);
+      if (!accepted.length) empty("No friends yet. Find people in the Everyone tab and send a request.");
+      accepted.forEach(([u, p]) => list.appendChild(playerRow(u, p)));
+    }
+  }
+  document.querySelectorAll("[data-ptab]").forEach(t => t.addEventListener("click", () => { ptab = t.dataset.ptab; renderPlayers(); }));
+  $("player-search").addEventListener("input", renderPlayers);
+
+  // Profile
+  let profileUid = null;
+  function openProfile(uid) {
+    profileUid = uid;
+    renderProfile();
+    if (!$("profile").open) $("profile").showModal();
+  }
+  function renderProfile() {
+    const p = others[profileUid];
+    if (!p) { $("profile").close(); return; }
+    const counts = p.counts || {};
+    $("profile-title").textContent = p.name + (profileUid === store.uid ? " (you)" : "");
+    const sub = $("profile-sub");
+    sub.innerHTML = "";
+    sub.appendChild(el("span", "dot" + (isOn(profileUid) ? " on" : "")));
+    sub.appendChild(el("span", null, isOn(profileUid) ? "Online now" : "Last seen " + ago(statuses[profileUid]?.lastChanged)));
+    if (p.cursedDay === today()) sub.appendChild(el("span", "tag", "CURSED"));
+    if (friends[profileUid] === "accepted") { const t = el("span", "tag", "FRIEND"); t.style.cssText = "background:#2a3a12;color:#c8f08a"; sub.appendChild(t); }
+
+    const grid = $("profile-cocos");
+    grid.innerHTML = "";
+    for (const c of COCOS) {
+      const n = counts[c.id] || 0;
+      const item = el("div", "col-item" + (n ? "" : " locked") + (p.latest === c.id ? " latest" : ""));
+      const t = el("div", "tile");
+      cropStyle(t, c);
+      item.appendChild(t);
+      item.appendChild(el("span", "count", "×" + n));
+      item.appendChild(el("small", null, n ? c.name : "???"));
+      grid.appendChild(item);
+    }
+
+    const rarest = [...COCOS].reverse().find(c => counts[c.id]);
+    const since = p.since ? new Date(p.since + "T00:00").toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "—";
+    const stats = $("profile-stats");
+    stats.innerHTML = "";
+    for (const [v, label] of [
+      [(p.coins || 0).toLocaleString(), "Coco Coins"],
+      [(p.cocos || 0).toLocaleString(), "Cocos found"],
+      [(p.spins || 0).toLocaleString(), "Lifetime spins"],
+      [COCOS.filter(c => counts[c.id]).length + "/" + COCOS.length, "Collection"],
+      [rarest ? rarest.name : "—", "Rarest find"],
+      [(p.longestDry || 0).toLocaleString(), "Longest drought"],
+      [p.spins ? ((p.cocos || 0) / p.spins * 100).toFixed(1) + "%" : "—", "Hit rate"],
+      [since, "Playing since"],
+    ]) {
+      const s = el("div", "stat");
+      s.appendChild(el("b", null, v));
+      s.appendChild(el("span", null, label));
+      stats.appendChild(s);
+    }
+
+    const actions = $("profile-actions");
+    actions.innerHTML = "";
+    const fb = friendButton(profileUid);
+    if (fb) actions.appendChild(fb);
+    if (friends[profileUid] === "incoming") actions.appendChild(btn("ghost-btn", "Decline", () => friendAction(profileUid, true)));
+    if (friends[profileUid] === "accepted") actions.appendChild(btn("ghost-btn", "Remove friend", () => {
+      if (confirm(`Remove ${p.name} from your friends?`)) friendAction(profileUid, true);
+    }));
+  }
+
+  // Leaderboard
+  const BOARDS = [
+    { id: "cocos", label: "Cocos found", val: p => p.cocos || 0 },
+    { id: "collection", label: "Collection", val: p => COCOS.filter(c => (p.counts || {})[c.id]).length, fmt: v => `${v}/${COCOS.length}`, tie: p => (p.counts || {}).shadow || 0 },
+    { id: "shadow", label: "Shadow Cocos", val: p => (p.counts || {}).shadow || 0 },
+    { id: "coins", label: "Richest", val: p => p.coins || 0 },
+    { id: "spins", label: "Most spins", val: p => p.spins || 0 },
+    { id: "drought", label: "Longest drought", val: p => p.longestDry || 0 },
+  ];
+  let board = "cocos", scope = "all";
+  for (const b of BOARDS) {
+    const t = el("button", "tab", b.label);
+    t.dataset.board = b.id;
+    t.addEventListener("click", () => { board = b.id; renderLeader(); });
+    $("lb-cats").appendChild(t);
+  }
+  document.querySelectorAll("[data-scope]").forEach(t => t.addEventListener("click", () => { scope = t.dataset.scope; renderLeader(); }));
+  function renderLeader() {
+    document.querySelectorAll("[data-board]").forEach(t => t.classList.toggle("active", t.dataset.board === board));
+    document.querySelectorAll("[data-scope]").forEach(t => t.classList.toggle("active", t.dataset.scope === scope));
+    const b = BOARDS.find(x => x.id === board);
+    const rows = named()
+      .filter(([u]) => scope === "all" || friends[u] === "accepted" || u === store.uid)
+      .map(([u, p]) => ({ u, p, v: b.val(p), t: b.tie ? b.tie(p) : 0 }))
+      .sort((x, y) => y.v - x.v || y.t - x.t || x.p.name.localeCompare(y.p.name));
+    // Ties share a rank (1, 2, 2, 4...)
+    rows.forEach((r, i) => { r.rank = i && rows[i - 1].v === r.v && rows[i - 1].t === r.t ? rows[i - 1].rank : i + 1; });
+    const list = $("lb-list");
+    list.innerHTML = "";
+    if (!rows.length) { list.appendChild(el("div", "empty-note", scope === "friends" ? "Add some friends to compete with them." : "No players yet.")); return; }
+    const show = rows.slice(0, 25);
+    const mine = rows.find(r => r.u === store.uid);
+    if (mine && !show.includes(mine)) show.push(mine);
+    for (const r of show) {
+      const row = el("div", "prow" + (r.u === store.uid ? " me" : ""));
+      row.appendChild(el("span", "lb-rank" + (r.rank <= 3 ? " r" + r.rank : ""), r.rank));
+      row.appendChild(el("span", "dot" + (isOn(r.u) ? " on" : "")));
+      const pn = el("div", "pn");
+      pn.appendChild(el("b", null, r.p.name + (r.u === store.uid ? " (you)" : "")));
+      row.appendChild(pn);
+      row.appendChild(el("span", "lb-val", b.fmt ? b.fmt(r.v) : r.v.toLocaleString()));
+      row.addEventListener("click", () => openProfile(r.u));
+      list.appendChild(row);
+    }
+  }
+  function openLeader() {
+    renderLeader();
+    $("leader").showModal();
+  }
+
+  // Activity feed
+  const FEED_ICONS = { complete: "★", curse: "☠", atone: "✦", join: "+" };
+  function renderFeed() {
+    $("feed-section").hidden = !feedItems.length;
+    const ul = $("feed");
+    ul.innerHTML = "";
+    for (const ev of [...feedItems].reverse()) {
+      const li = el("li");
+      const coco = COCOS.find(c => c.id === ev.coco);
+      const what = el("span", "what");
+      what.appendChild(el("b", null, ev.name || "Someone"));
+      if (ev.type === "coco" && coco) {
+        const face = el("div", "face");
+        cropStyle(face, coco);
+        li.appendChild(face);
+        what.append(coco.rarity === "LEGENDARY" ? " summoned the legendary " : coco.rarity === "RARE" ? " landed the rare " : " landed ");
+        what.appendChild(el("b", null, coco.name));
+        if (coco.rarity === "LEGENDARY") { what.append("!"); li.className = "legendary"; }
+      } else {
+        li.appendChild(el("span", "icon", FEED_ICONS[ev.type] || "•"));
+        what.append({
+          complete: " completed the entire collection!",
+          curse: " angered the Cocos",
+          atone: " was forgiven by the Cocos",
+          join: " entered the throne room",
+        }[ev.type] || " did something mysterious");
+        if (ev.type === "curse") li.className = "curse";
+      }
+      li.appendChild(what);
+      li.appendChild(el("time", null, ago(ev.at)));
+      ul.appendChild(li);
+    }
+  }
+  setInterval(() => { renderFeed(); if ($("players").open) renderPlayers(); }, 30000); // refresh "x min ago"
+
+  $("online-pill").addEventListener("click", () => openPlayers("online"));
+  $("players-open").addEventListener("click", () => openPlayers("all"));
+  $("friends-open").addEventListener("click", () => openPlayers("friends"));
+  $("leader-open").addEventListener("click", openLeader);
+
+  // ---------- Startup ----------
   spinBtn.addEventListener("click", spin);
   lever.addEventListener("click", spin);
   nameEl.addEventListener("keydown", e => { if (e.key === "Enter") spin(); });
-  refresh();
-  if (currentName()) {
-    creditsEl.textContent = "Each spin costs 1 Coco Coin.";
-    maybePledge(currentName());
-  }
+
+  (async () => {
+    spinBtn.disabled = lever.disabled = true;
+    creditsEl.textContent = "Summoning the Cocos...";
+    try {
+      store = await createStore();
+      await store.init();
+    } catch (e) {
+      console.error(e);
+      creditsEl.textContent = "Could not reach the Coco servers. Try refreshing the page.";
+      return;
+    }
+    $("mode-banner").hidden = !isLocal;
+    let first = true;
+    store.watchPublic(v => { others = v || {}; renderSocial(); });
+    store.watchStatus(v => { statuses = v || {}; renderSocial(); });
+    store.watchFriends(v => { friends = v || {}; renderSocial(); });
+    store.watchFeed(items => { feedItems = items; renderFeed(); }, 30);
+    store.watchPlayer(val => {
+      player = normalizePlayer(val);
+      syncName();
+      refresh();
+      publishProfile();
+      renderSocial();
+      if (first) {
+        first = false;
+        spinBtn.disabled = lever.disabled = false;
+        creditsEl.textContent = currentName() ? "Each spin costs 1 Coco Coin." : "Enter your name to play. Each spin costs 1 Coco Coin.";
+        maybePledge();
+      }
+    });
+    if (isLocal) window.__coco = { get player() { return player; } };
+  })();
 </script>
 </body>
 </html>
