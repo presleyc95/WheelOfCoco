@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>What Coco Are You?</title>
-<meta name="description" content="Pull the lever. The house decides which Coco you are today.">
+<meta name="description" content="Pull the lever. The house decides which Coco you are.">
 <link rel="icon" href="cocos.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Inter:wght@400;600&family=Nosifer&display=swap" rel="stylesheet">
 <style>
   :root {
     --felt: #0d3b2a;
@@ -18,6 +18,8 @@
     --red: #b3261e;
     --ink: #f6ecd2;
     --muted: #c9b98f;
+    --panel: #120802;
+    --panel-2: #2a1405;
     --reel: 120px;
   }
   * { box-sizing: border-box; }
@@ -27,6 +29,7 @@
     background:
       radial-gradient(ellipse at top, rgba(233,196,106,.18), transparent 60%),
       radial-gradient(ellipse at center, var(--felt) 0%, var(--felt-dark) 100%);
+    background-attachment: fixed;
     color: var(--ink);
     font-family: Inter, system-ui, sans-serif;
     display: flex;
@@ -42,8 +45,8 @@
     padding: 14px 28px;
     border: 3px solid var(--gold);
     border-radius: 14px;
-    background: linear-gradient(#2a1405, #120802);
-    box-shadow: 0 0 0 6px #2a1405, 0 0 30px rgba(233,196,106,.45);
+    background: linear-gradient(var(--panel-2), var(--panel));
+    box-shadow: 0 0 0 6px var(--panel-2), 0 0 30px rgba(233,196,106,.45);
     position: relative;
   }
   .marquee::before {
@@ -84,7 +87,7 @@
   .reels {
     display: flex; gap: 10px;
     padding: 12px;
-    background: #120802;
+    background: var(--panel);
     border-radius: 14px;
     border: 2px solid var(--gold-deep);
     position: relative;
@@ -147,20 +150,45 @@
   input[type=text] {
     font: 600 16px Inter, sans-serif;
     padding: 12px 14px; border-radius: 10px;
-    border: 2px solid var(--gold-deep); background: #120802; color: var(--ink);
+    border: 2px solid var(--gold-deep); background: var(--panel); color: var(--ink);
     width: 220px; max-width: 100%;
   }
   input[type=text]:focus { outline: none; border-color: var(--gold-bright); }
-  .spin-btn {
+  .gold-btn {
     font: 700 18px Cinzel, serif; letter-spacing: 2px;
     padding: 12px 26px; border-radius: 10px; border: 0; cursor: pointer;
     color: #2a1405;
     background: linear-gradient(180deg, var(--gold-bright), var(--gold) 50%, var(--gold-deep));
     box-shadow: 0 4px 0 #6b4a12, 0 8px 18px rgba(0,0,0,.4);
   }
-  .spin-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #6b4a12; }
-  .spin-btn:disabled { filter: grayscale(.6) brightness(.8); cursor: default; }
-  .credits { text-align: center; margin-top: 12px; color: var(--muted); font-size: 13px; }
+  .gold-btn small { font: 600 11px Inter, sans-serif; letter-spacing: 0; display: block; opacity: .8; }
+  .gold-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #6b4a12; }
+  .gold-btn:disabled { filter: grayscale(.7) brightness(.7); cursor: default; transform: none; }
+  .ghost-btn {
+    font: 600 14px Inter, sans-serif; padding: 10px 16px; border-radius: 10px; cursor: pointer;
+    background: transparent; color: var(--muted); border: 1px solid var(--gold-deep);
+  }
+  .ghost-btn:hover { color: var(--ink); border-color: var(--gold); }
+  .credits { text-align: center; margin-top: 12px; color: var(--muted); font-size: 13px; min-height: 1.3em; }
+
+  /* ---------- Wallet ---------- */
+  .wallet {
+    margin-top: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center;
+    background: rgba(0,0,0,.35); border: 1px solid var(--gold-deep); border-radius: 999px;
+    padding: 6px 6px 6px 14px;
+  }
+  .wallet[hidden] { display: none; }
+  .wallet-coins { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+  .wallet-coins b { font: 700 20px Cinzel, serif; color: var(--gold-bright); }
+  .coin-icon {
+    width: 22px; height: 22px; border-radius: 50%; flex: none; display: inline-grid; place-items: center;
+    background: radial-gradient(circle at 35% 35%, var(--gold-bright), var(--gold) 50%, var(--gold-deep));
+    border: 2px solid #8a6420; font: 900 11px Cinzel, serif; color: #6b4a12;
+  }
+  .coin-icon::before { content: "C"; }
+  .shop-btn { font-size: 14px; padding: 8px 18px; letter-spacing: 1px; }
+  .boost-status { margin-top: 8px; font-size: 13px; color: var(--gold-bright); text-align: center; }
+  .boost-status:empty { display: none; }
 
   /* ---------- Result ---------- */
   .result {
@@ -178,7 +206,7 @@
     width: 180px; height: 180px; margin: 14px auto;
     border-radius: 50%; border: 4px solid var(--gold);
     background-image: url("cocos.webp"); background-repeat: no-repeat;
-    box-shadow: 0 0 0 6px #2a1405, 0 0 30px rgba(233,196,106,.6);
+    box-shadow: 0 0 0 6px var(--panel-2), 0 0 30px rgba(233,196,106,.6);
   }
   .result h2 {
     font-family: "Cinzel Decorative", serif; font-size: clamp(26px, 6vw, 38px);
@@ -197,7 +225,7 @@
   .result p { line-height: 1.55; margin: 8px 0; }
   .stats { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
   .stat {
-    background: #2a1405; border: 1px solid var(--gold-deep); border-radius: 10px;
+    background: var(--panel-2); border: 1px solid var(--gold-deep); border-radius: 10px;
     padding: 8px 12px; min-width: 120px;
   }
   .stat b { display: block; font-family: Cinzel, serif; color: var(--gold); font-size: 18px; }
@@ -233,15 +261,190 @@
     border-radius: 11px; background: var(--red); color: #fff; font: 700 12px/22px Inter, sans-serif;
   }
   .col-item.locked .count { display: none; }
-  .col-item.today .tile { box-shadow: 0 0 0 3px var(--gold-bright), 0 0 16px var(--gold-bright); }
+  .col-item.latest .tile { box-shadow: 0 0 0 3px var(--gold-bright), 0 0 16px var(--gold-bright); }
   .col-item small { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.2; }
+
+  /* ---------- Dialogs ---------- */
+  dialog {
+    border: 3px solid var(--gold); border-radius: 18px; padding: 0;
+    background: linear-gradient(#1d0f04, #0c0601); color: var(--ink);
+    width: min(600px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    box-shadow: 0 0 60px rgba(233,196,106,.3);
+  }
+  dialog::backdrop { background: rgba(0,0,0,.75); }
+  .modal-head {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid var(--gold-deep);
+    position: sticky; top: 0; background: #1d0f04; z-index: 1;
+  }
+  .modal-head h2 { font: 700 22px "Cinzel Decorative", serif; color: var(--gold-bright); margin: 0; }
+  .close-x {
+    background: none; border: 0; color: var(--muted); font-size: 28px; line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  .close-x:hover { color: var(--ink); }
+  .modal-body { padding: 16px 18px 22px; }
+  .modal-body h3 { font: 700 16px Cinzel, serif; color: var(--gold); margin: 18px 0 10px; letter-spacing: 1px; }
+  .modal-body h3:first-child { margin-top: 0; }
+  .muted { color: var(--muted); font-size: 13px; margin: 0 0 10px; line-height: 1.5; }
+
+  .packs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .pack {
+    background: var(--panel-2); border: 2px solid var(--gold-deep); border-radius: 12px;
+    color: var(--ink); padding: 12px 8px; cursor: pointer; text-align: center; font-family: Inter, sans-serif;
+  }
+  .pack:hover { border-color: var(--gold-bright); transform: translateY(-2px); }
+  .pack b { display: flex; align-items: center; justify-content: center; gap: 6px; font: 700 24px Cinzel, serif; color: var(--gold-bright); }
+  .pack span { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .pack .diff { display: flex; justify-content: center; gap: 3px; margin-top: 6px; }
+  .pack .diff i { width: 8px; height: 8px; border-radius: 50%; background: #3a2306; }
+  .pack .diff i.on { background: var(--red); }
+
+  .problem { text-align: center; }
+  .problem .prompt { font: 700 13px Inter, sans-serif; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+  .eq {
+    font: 600 clamp(22px, 5vw, 30px) "Cambria Math", Cambria, Georgia, serif; color: var(--ink);
+    margin: 10px 0; letter-spacing: .5px;
+  }
+  .answers { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 14px 0 6px; }
+  .answers label { display: flex; align-items: center; gap: 8px; font: 600 20px "Cambria Math", Cambria, Georgia, serif; }
+  .answers input { width: 110px; text-align: center; }
+  .problem .hint { font-size: 12px; color: var(--muted); }
+  .problem .actions { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
+  .feedback { min-height: 1.4em; margin-top: 10px; font-weight: 600; }
+  .feedback.good { color: #7ee08a; }
+  .feedback.bad { color: #ff8a80; }
+
+  .boosts { display: grid; gap: 10px; }
+  .boost {
+    display: flex; align-items: center; gap: 12px; justify-content: space-between;
+    background: var(--panel-2); border: 1px solid var(--gold-deep); border-radius: 12px; padding: 10px 12px;
+  }
+  .boost strong { display: block; color: var(--gold-bright); font-family: Cinzel, serif; }
+  .boost span { font-size: 13px; color: var(--muted); }
+  .boost .gold-btn { font-size: 14px; padding: 8px 14px; letter-spacing: 0; white-space: nowrap; flex: none; }
+
+  .pledge-quote {
+    font: 700 20px Cinzel, serif; color: var(--gold-bright); text-align: center;
+    border: 1px dashed var(--gold-deep); border-radius: 10px; padding: 12px; margin: 10px 0 14px;
+  }
+  #pledge-input { width: 100%; }
+  .row { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 14px; }
+  .shake { animation: shake .4s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+  }
+
+  input[readonly] { border-style: dashed; cursor: default; color: var(--gold-bright); }
+  input[readonly]:focus { border-color: var(--gold-deep); }
+  .atone-btn { margin-top: 12px; font-size: 14px; padding: 10px 20px; animation: flicker 3s infinite; }
+  .atone-btn[hidden] { display: none; }
+
+  .stat-hero { text-align: center; margin-bottom: 16px; }
+  .stat-hero b { display: block; font: 900 clamp(48px, 12vw, 72px)/1 "Cinzel Decorative", serif; color: var(--gold-bright); }
+  .stat-hero span { font: 700 13px Cinzel, serif; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat-grid .stat { min-width: 0; text-align: center; }
+  @media (max-width: 520px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  textarea {
+    width: 100%; font: 15px/1.5 Inter, sans-serif; padding: 12px; border-radius: 10px; resize: vertical;
+    border: 2px solid var(--gold-deep); background: var(--panel); color: var(--ink);
+  }
+  textarea:focus { outline: none; border-color: var(--gold-bright); }
+  .checklist { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 4px; font-size: 14px; }
+  .checklist li { color: var(--muted); }
+  .checklist li::before { content: "✗ "; color: #ff6b6b; font-weight: 700; }
+  .checklist li.ok { color: var(--ink); }
+  .checklist li.ok::before { content: "✓ "; color: #7ee08a; }
+
+  /* ---------- Wrath ---------- */
+  dialog.wrath {
+    background: #000; border: 4px solid #ff1a1a; width: min(760px, calc(100vw - 24px));
+    box-shadow: 0 0 80px #ff0000, inset 0 0 60px rgba(255,0,0,.4);
+    text-align: center; color: #ffd6d6;
+    animation: shake .5s 4;
+  }
+  dialog.wrath::backdrop { background: radial-gradient(circle, rgba(120,0,0,.85), #000); }
+  .wrath-body { padding: 24px 20px 28px; }
+  .wrath h2 {
+    font: 400 clamp(26px, 6.5vw, 54px)/1.15 Nosifer, "Cinzel Decorative", serif; color: #ff1a1a;
+    margin: 0 0 18px; text-shadow: 0 0 18px #ff0000, 0 4px 0 #400;
+    animation: flicker 2.5s infinite;
+  }
+  .wrath-img {
+    width: 100%; aspect-ratio: 799 / 535; border-radius: 12px; border: 2px solid #600;
+    background: url("cocos.webp") center / cover;
+    filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(6) contrast(1.5) brightness(.55);
+    animation: flicker 3.3s infinite;
+  }
+  .wrath p { font-size: 18px; line-height: 1.5; margin: 16px 0; }
+  .wrath p b { color: #ff4d4d; font-size: 22px; }
+  .wrath .gold-btn { color: #fff; background: linear-gradient(#ff3030, #8a0000); box-shadow: 0 4px 0 #300, 0 0 30px #f00; }
+  @keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: .35; }
+  }
+
+  /* ---------- Cursed theme (after angering the Cocos) ---------- */
+  body.cursed {
+    --felt: #1a0000; --felt-dark: #000; --gold: #9b111e; --gold-bright: #ff3333; --gold-deep: #4d0000;
+    --red: #ff0000; --ink: #f0d6d6; --muted: #b06a6a; --panel: #070000; --panel-2: #160000;
+    background:
+      radial-gradient(ellipse at top, rgba(255,0,0,.18), transparent 60%),
+      radial-gradient(ellipse at center, #1a0000 0%, #000 100%);
+    background-attachment: fixed;
+  }
+  body.cursed::before { /* flickering vignette */
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 40;
+    background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,.9) 100%);
+    animation: flicker 4s infinite;
+  }
+  body.cursed h1 {
+    font: 400 clamp(22px, 5vw, 40px) Nosifer, "Cinzel Decorative", serif;
+    background: none; color: #ff2424; text-shadow: 0 0 14px #ff0000, 0 3px 0 #300;
+    animation: flicker 3s infinite;
+  }
+  body.cursed .marquee { background: #050000; box-shadow: 0 0 0 6px #160000, 0 0 40px rgba(255,0,0,.6); }
+  body.cursed .machine { background: linear-gradient(160deg, #2a0000, #000 50%, #1a0000); box-shadow: 0 0 50px rgba(255,0,0,.35); }
+  body.cursed .reel { background: #000; }
+  body.cursed .tile, body.cursed .result .portrait {
+    filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(5) contrast(1.4) brightness(.6);
+  }
+  body.cursed .lever .base { background: linear-gradient(90deg, #2a0000, #7a0000, #2a0000); }
+  body.cursed .lever .arm { background: linear-gradient(90deg, #333, #777, #333); }
+  body.cursed .gold-btn { color: #fff; background: linear-gradient(180deg, #ff3030, #9b111e 50%, #4d0000); box-shadow: 0 4px 0 #300, 0 8px 18px rgba(0,0,0,.5); }
+  body.cursed .result, body.cursed dialog:not(.wrath) { background: linear-gradient(#120000, #000); }
+  body.cursed .modal-head { background: #120000; }
+  body.cursed .result .rarity:not(.legendary) { color: #ffb3b3; }
+  body.cursed .pack .diff i { background: #300; }
+  body.cursed .coin-icon, body.cursed .coin {
+    background: radial-gradient(circle at 35% 35%, #ff6b6b, #b00000 55%, #3a0000); border-color: #300; color: #300;
+  }
+  .drips { display: none; }
+  body.cursed .drips { display: block; position: fixed; top: 0; left: 0; right: 0; height: 0; z-index: 45; pointer-events: none; }
+  .drips::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 12px;
+    background: linear-gradient(#3a0000, #8a0000); box-shadow: 0 0 20px #f00;
+  }
+  .drip {
+    position: absolute; top: 0; border-radius: 0 0 999px 999px;
+    background: linear-gradient(#5a0000, #b00000);
+    transform-origin: top; animation: drip ease-in infinite;
+  }
+  @keyframes drip {
+    0% { transform: scaleY(.15); opacity: 1; }
+    75% { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(1); opacity: 0; }
+  }
 
   /* coins */
   .coin {
     position: fixed; top: -40px; width: 26px; height: 26px; border-radius: 50%;
     background: radial-gradient(circle at 35% 35%, var(--gold-bright), var(--gold) 50%, var(--gold-deep));
     border: 2px solid #8a6420;
-    pointer-events: none; z-index: 50;
+    pointer-events: none; z-index: 1000;
     animation: fall linear forwards;
   }
   @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
@@ -252,17 +455,20 @@
     .reels { gap: 6px; padding: 8px; }
     .lever { height: 160px; }
     .lever .arm { height: 105px; }
+    .packs { grid-template-columns: repeat(2, 1fr); }
+    .boost { flex-direction: column; align-items: stretch; text-align: center; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .marquee::before, .coin { animation: none; }
+    .marquee::before, .coin, .drip, body.cursed::before, body.cursed h1, .wrath h2, .wrath-img, dialog.wrath { animation: none; }
   }
 </style>
 </head>
 <body>
+<div class="drips" id="drips" aria-hidden="true"></div>
 
 <header>
-  <div class="marquee"><h1>What Coco Are You?</h1></div>
-  <p class="tagline">Pull the lever. The house decides who you are today.</p>
+  <div class="marquee"><h1 id="title">What Coco Are You?</h1></div>
+  <p class="tagline" id="tagline">Pull the lever. The house decides who you are.</p>
 </header>
 
 <div class="machine-wrap">
@@ -277,12 +483,19 @@
 
 <div class="controls">
   <input type="text" id="name" placeholder="Your name, designer" maxlength="40" autocomplete="off">
-  <button class="spin-btn" id="spin">SPIN</button>
+  <button class="gold-btn" id="spin">SPIN<small>1 Coco Coin</small></button>
 </div>
-<div class="credits" id="credits">Keep pulling until a Coco shows up. One Coco per designer per day.</div>
+<div class="wallet" id="wallet" hidden>
+  <span class="wallet-coins"><span class="coin-icon"></span><b id="coin-count">0</b> Coco Coins</span>
+  <button class="gold-btn shop-btn" id="shop-open">SHOP</button>
+  <button class="ghost-btn shop-btn" id="stats-open">STATS</button>
+</div>
+<button class="gold-btn atone-btn" id="atone-open" hidden>BEG FOR FORGIVENESS</button>
+<div class="boost-status" id="boost-status"></div>
+<div class="credits" id="credits">Enter your name to play. Each spin costs 1 Coco Coin.</div>
 
 <section class="result" id="result" aria-live="polite">
-  <div class="kicker" id="r-kicker">TODAY YOU ARE</div>
+  <div class="kicker" id="r-kicker">YOU ARE</div>
   <div class="portrait" id="r-portrait"></div>
   <h2 id="r-name"></h2>
   <div class="rarity" id="r-rarity"></div>
@@ -304,6 +517,118 @@
   <summary>Paytable: meet the Cocos</summary>
   <div class="pay-grid" id="paytable"></div>
 </details>
+
+<!-- Shop -->
+<dialog id="shop" aria-labelledby="shop-title">
+  <div class="modal-head">
+    <h2 id="shop-title">The Coco Shop</h2>
+    <div class="wallet-coins"><span class="coin-icon"></span><b id="shop-coins">0</b></div>
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div id="shop-main">
+      <h3>Buy Coco Coins</h3>
+      <p class="muted">The Cocos do not accept money. They accept algebra. Bigger bags, harder problems.</p>
+      <div class="packs" id="packs"></div>
+
+      <h3>Daily Boosts</h3>
+      <p class="muted">Each boost can be bought once per day. Boosts raise your chance of landing a Coco and stay with you until used.</p>
+      <div class="boosts" id="boosts"></div>
+
+      <h3>Daily Tribute</h3>
+      <div class="boost">
+        <div><strong>2 Free Coco Coins</strong><span id="tribute-status">Speak the truth about Colton once per day.</span></div>
+        <button class="gold-btn" id="tribute-btn">Pay tribute</button>
+      </div>
+    </div>
+
+    <div id="shop-problem" class="problem" hidden>
+      <div class="prompt" id="p-prompt"></div>
+      <div id="p-lines"></div>
+      <div class="answers" id="p-answers"></div>
+      <div class="hint" id="p-hint"></div>
+      <div class="feedback" id="p-feedback" aria-live="polite"></div>
+      <div class="actions">
+        <button class="ghost-btn" id="p-back">Back to shop</button>
+        <button class="gold-btn" id="p-submit">SUBMIT</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- Daily pledge -->
+<dialog id="pledge" aria-labelledby="pledge-title">
+  <div class="modal-head">
+    <h2 id="pledge-title">Daily Tribute</h2>
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <p class="muted">The Cocos grant 2 free Coco Coins each day to those who speak the truth. Type it exactly:</p>
+    <div class="pledge-quote">Colton is the coolest boss ever</div>
+    <input type="text" id="pledge-input" autocomplete="off" placeholder="Speak the truth...">
+    <div class="feedback bad" id="pledge-msg" aria-live="polite"></div>
+    <div class="row">
+      <button class="ghost-btn" id="pledge-skip">No thanks</button>
+      <button class="gold-btn" id="pledge-claim">CLAIM 2 COINS</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Name lock -->
+<dialog id="name-dialog" aria-labelledby="name-title">
+  <div class="modal-head">
+    <h2 id="name-title">Choose Wisely</h2>
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <p class="muted">The Cocos will know you by this name forever. Once it's set, it can never be changed.</p>
+    <div class="pledge-quote" id="name-preview"></div>
+    <div class="row">
+      <button class="ghost-btn" data-close>Let me fix it</button>
+      <button class="gold-btn" id="name-confirm">LOCK IT IN</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Stats -->
+<dialog id="stats" aria-labelledby="stats-title">
+  <div class="modal-head">
+    <h2 id="stats-title">Your Stats</h2>
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="stat-hero"><b id="st-spins">0</b><span>lifetime spins</span></div>
+    <div class="stat-grid" id="stat-grid"></div>
+  </div>
+</dialog>
+
+<!-- Atonement -->
+<dialog id="atone" aria-labelledby="atone-title">
+  <div class="modal-head">
+    <h2 id="atone-title">Atonement</h2>
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+  </div>
+  <div class="modal-body">
+    <p class="muted">The Cocos may lift the curse if you prove your devotion. Write a heartfelt message about how cool Colton is. Your lost coins are gone forever, but the light may return.</p>
+    <textarea id="atone-text" rows="8" placeholder="Colton is..."></textarea>
+    <ul class="checklist" id="atone-checks"></ul>
+    <div class="feedback bad" id="atone-msg" aria-live="polite"></div>
+    <div class="row">
+      <button class="gold-btn" id="atone-submit" disabled>OFFER MY WORDS</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Wrath -->
+<dialog id="wrath" class="wrath" aria-labelledby="wrath-title">
+  <div class="wrath-body">
+    <h2 id="wrath-title">You Have Offended The Great Cocos</h2>
+    <div class="wrath-img"></div>
+    <p id="wrath-text"></p>
+    <p>The gods will remember this until the sun rises again, unless you beg for forgiveness.</p>
+    <button class="gold-btn" id="wrath-ok">I ACCEPT MY FATE</button>
+  </div>
+</dialog>
 
 <script>
   // Crop boxes are squares in the 799x535 source image: [x, y, size]
@@ -332,46 +657,90 @@
       power: "Vanish from meetings" },
   ];
   const TOTAL_WEIGHT = COCOS.reduce((s, c) => s + c.weight, 0);
-  const COCO_CHANCE = 0.10; // the other 90% of the time, no Coco
+  const COCO_CHANCE = 0.10; // base chance per spin; the other 90% is a bust
+  const SPIN_COST = 1;
+  const DAILY_TRIBUTE = 2;
   const chanceOf = c => COCO_CHANCE * c.weight / TOTAL_WEIGHT;
   const BUST = {
-    name: "No Coco Today", crop: [345, 255, 150],
+    name: "No Coco", crop: [345, 255, 150],
     lines: [
       "The chest stays locked. The Cocos have looked upon you and said nothing.",
-      "The house wins. You are merely a person today, and that is fine.",
+      "The house wins. You are merely a person, and that is fine.",
       "The throne room is closed to you. Do your work like a regular mortal.",
       "Not a single Coco answered the call. Yet.",
       "The reels did not align. Somewhere, a Coco is laughing.",
     ],
+    cursedLines: [
+      "The Cocos turn their backs on you.",
+      "You hear whispering from the throne. It is not kind.",
+      "Something in the dark remembers what you said about Colton.",
+      "The reels bleed. The Cocos do not forgive so easily.",
+      "You should have said he was the coolest.",
+    ],
   };
+
+  // Coin packs: bigger bag, harder algebra
+  const PACKS = [
+    { coins: 1,   level: 1, label: "Warm-up" },
+    { coins: 5,   level: 2, label: "Two-step" },
+    { coins: 10,  level: 3, label: "Both sides" },
+    { coins: 25,  level: 4, label: "Distribute" },
+    { coins: 50,  level: 5, label: "Systems" },
+    { coins: 100, level: 6, label: "Quadratics" },
+  ];
+  const BOOSTS = [
+    { id: "charm", name: "Lucky Charm", cost: 2, chance: 0.20, spins: 5,
+      desc: "Double Coco chance (20%) for your next 5 spins." },
+    { id: "blessing", name: "Elder's Blessing", cost: 5, chance: 0.30, spins: 10,
+      desc: "Triple Coco chance (30%) for your next 10 spins." },
+    { id: "guarantee", name: "Mystic's Guarantee", cost: 8, chance: 1, spins: 1,
+      desc: "Your next spin is a guaranteed Coco." },
+  ];
+
+  const $ = id => document.getElementById(id);
 
   function cropStyle(el, coco) {
     const [x, y, s] = coco.crop;
     el.style.backgroundSize = (IMG_W / s * 100) + "% auto";
     el.style.backgroundPosition = (x / (IMG_W - s) * 100) + "% " + (y / (IMG_H - s) * 100) + "%";
   }
-
   function today() {
     const d = new Date();
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
-  function roll() {
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  function roll(chance) {
     const lucky = 1 + Math.floor(Math.random() * 99);
-    if (Math.random() >= COCO_CHANCE) return { coco: null, lucky, bustLine: BUST.lines[Math.floor(Math.random() * BUST.lines.length)] };
-    let r = Math.random() * TOTAL_WEIGHT, pick = COCOS[0];
-    for (const c of COCOS) { if ((r -= c.weight) < 0) { pick = c; break; } }
-    return { coco: pick, lucky };
+    if (Math.random() >= chance) return { coco: null, lucky, bustLine: pick(cursedToday() ? BUST.cursedLines : BUST.lines) };
+    let r = Math.random() * TOTAL_WEIGHT, choice = COCOS[0];
+    for (const c of COCOS) { if ((r -= c.weight) < 0) { choice = c; break; } }
+    return { coco: choice, lucky };
   }
 
-  // Save data lives in this browser only, keyed by lowercased name:
-  // { day, spins, today: { id, lucky } | null, counts: { [cocoId]: n } }
-  const SAVE_KEY = "coco-save";
+  // ---------- Save data ----------
+  // Lives in this browser only, keyed by lowercased name:
+  // { coins, counts: { [cocoId]: n }, latest, dry, boosts: [{ name, chance, spins }],
+  //   boostDay: { [boostId]: date }, pledgeDay, pledgeDeclined, stats: {...} }
+  // Bumping the key prefix wipes everyone's progress (v2 = coin economy rollout).
+  const SAVE_KEY = "coco-v2-save";
+  const NAME_KEY = "coco-v2-name";
+  const CURSE_KEY = "coco-v2-curse";
+  try { ["coco-save", "coco-name", "coco-curse"].forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  const STAT_KEYS = ["spins", "cocos", "busts", "longestDry", "coinsEarned", "coinsSpent", "coinsLost",
+    "solved", "missed", "boosts", "tributes", "curses", "atonements"];
   function loadAll() {
     try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch (e) { return {}; }
   }
   function loadPlayer(name) {
-    const p = loadAll()[name.toLowerCase()] || { counts: {} };
-    if (p.day !== today()) { p.day = today(); p.spins = 0; p.today = null; }
+    const p = loadAll()[name.toLowerCase()] || {};
+    p.coins = p.coins || 0;
+    p.counts = p.counts || {};
+    p.dry = p.dry || 0;
+    p.boosts = p.boosts || [];
+    p.boostDay = p.boostDay || {};
+    p.stats = p.stats || { since: today() };
+    for (const k of STAT_KEYS) p.stats[k] = p.stats[k] || 0;
     return p;
   }
   function savePlayer(name, p) {
@@ -379,10 +748,16 @@
     all[name.toLowerCase()] = p;
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(all)); } catch (e) {}
   }
+  function cursedToday() {
+    try { return localStorage.getItem(CURSE_KEY) === today(); } catch (e) { return false; }
+  }
+  // Once a name is locked in, it can't be changed
+  let lockedName = "";
+  try { lockedName = localStorage.getItem(NAME_KEY) || ""; } catch (e) {}
+  const currentName = () => lockedName;
 
-  // Build reels
+  // ---------- Reels ----------
   const REELS = 3, STRIP_LEN = 40;
-  const reelsEl = document.getElementById("reels");
   const reels = [];
   for (let i = 0; i < REELS; i++) {
     const reel = document.createElement("div");
@@ -390,17 +765,17 @@
     const strip = document.createElement("div");
     strip.className = "strip";
     reel.appendChild(strip);
-    reelsEl.appendChild(reel);
+    $("reels").appendChild(reel);
     reels.push({ reel, strip });
-    fillStrip(strip, COCOS[(i * 2 + 3) % COCOS.length], Math.random);
+    fillStrip(strip, COCOS[(i * 2 + 3) % COCOS.length]);
   }
-  function fillStrip(strip, target, rng) {
+  function fillStrip(strip, target) {
     strip.innerHTML = "";
     strip.style.transition = "none";
     strip.style.transform = "translateY(0)";
     // first tile = target (shown at end after scrolling to top), rest random
     const tiles = [target];
-    for (let i = 1; i < STRIP_LEN; i++) tiles.push(COCOS[Math.floor(rng() * COCOS.length)]);
+    for (let i = 1; i < STRIP_LEN; i++) tiles.push(pick(COCOS));
     for (const c of tiles) {
       const t = document.createElement("div");
       t.className = "tile";
@@ -409,8 +784,7 @@
     }
   }
 
-  // Paytable
-  const pay = document.getElementById("paytable");
+  // ---------- Paytable ----------
   for (const c of COCOS) {
     const item = document.createElement("div");
     item.className = "pay-item";
@@ -418,7 +792,7 @@
     t.className = "tile"; cropStyle(t, c);
     item.appendChild(t);
     item.insertAdjacentHTML("beforeend", `<strong>${c.name}</strong>${c.rarity} · ${(chanceOf(c) * 100).toFixed(1)}%`);
-    pay.appendChild(item);
+    $("paytable").appendChild(item);
   }
   {
     const item = document.createElement("div");
@@ -427,135 +801,178 @@
     t.className = "tile"; cropStyle(t, BUST); t.style.filter = "grayscale(1) brightness(.6)";
     item.appendChild(t);
     item.insertAdjacentHTML("beforeend", `<strong>No Coco</strong>BUST · ${((1 - COCO_CHANCE) * 100).toFixed(0)}%`);
-    pay.appendChild(item);
+    $("paytable").appendChild(item);
   }
 
-  // Wiring
-  const nameEl = document.getElementById("name");
-  const spinBtn = document.getElementById("spin");
-  const lever = document.getElementById("lever");
-  const resultEl = document.getElementById("result");
-  const creditsEl = document.getElementById("credits");
-  try { nameEl.value = localStorage.getItem("coco-name") || ""; } catch (e) {}
+  // ---------- Spinning ----------
+  const nameEl = $("name"), spinBtn = $("spin"), lever = $("lever");
+  const resultEl = $("result"), creditsEl = $("credits");
+  if (lockedName) { nameEl.value = lockedName; nameEl.readOnly = true; }
 
   let spinning = false;
   function spin() {
     if (spinning) return;
-    const name = nameEl.value.trim();
-    if (!name) {
-      nameEl.focus();
-      creditsEl.textContent = "The house needs a name before you play.";
+    const name = currentName();
+    if (!name) { askLockName(spin); return; }
+    refresh();
+    if (maybePledge(name)) return;
+
+    const player = loadPlayer(name);
+    if (player.coins < SPIN_COST) {
+      creditsEl.textContent = "You are out of Coco Coins. The shop awaits.";
+      openShop();
       return;
     }
-    try { localStorage.setItem("coco-name", name); } catch (e) {}
+
+    // Pay, then use the strongest active boost
+    player.coins -= SPIN_COST;
+    let chance = COCO_CHANCE, boost = null;
+    for (const b of player.boosts) if (b.chance > chance) { chance = b.chance; boost = b; }
+    if (boost && --boost.spins <= 0) player.boosts.splice(player.boosts.indexOf(boost), 1);
+
+    const fortune = roll(chance);
+    const { coco } = fortune;
+    player.dry++;
+    const took = player.dry;
+    const st = player.stats;
+    st.spins++;
+    st.coinsSpent += SPIN_COST;
+    st.longestDry = Math.max(st.longestDry, coco ? took - 1 : took);
+    if (coco) {
+      player.counts[coco.id] = (player.counts[coco.id] || 0) + 1;
+      player.latest = coco.id;
+      player.dry = 0;
+      st.cocos++;
+    } else {
+      st.busts++;
+    }
+    savePlayer(name, player);
+    refresh();
+
     spinning = true;
     spinBtn.disabled = lever.disabled = true;
     lever.classList.add("pulled");
     setTimeout(() => lever.classList.remove("pulled"), 350);
     resultEl.classList.remove("show");
-    creditsEl.textContent = "Rolling the bones...";
+    creditsEl.textContent = boost ? `Rolling with ${boost.name}...` : "Rolling the bones...";
 
-    // Already collected today? Replay it. Otherwise roll fresh.
-    const player = loadPlayer(name);
-    const already = !!player.today;
-    let fortune;
-    if (already) {
-      fortune = { coco: COCOS.find(c => c.id === player.today.id), lucky: player.today.lucky };
-    } else {
-      fortune = roll();
-      player.spins++;
-      if (fortune.coco) {
-        player.today = { id: fortune.coco.id, lucky: fortune.lucky, spins: player.spins };
-        player.counts[fortune.coco.id] = (player.counts[fortune.coco.id] || 0) + 1;
-      }
-      savePlayer(name, player);
-    }
-    const { coco } = fortune;
     // On a bust, land on three different faces so it never looks like a match
-    const stops = coco ? [coco, coco, coco]
-      : [...COCOS].sort(() => Math.random() - 0.5).slice(0, REELS);
+    const stops = coco ? [coco, coco, coco] : [...COCOS].sort(() => Math.random() - 0.5).slice(0, REELS);
     const tileH = reels[0].reel.clientHeight + 2; // + border
     reels.forEach(({ reel, strip }, i) => {
       reel.classList.remove("win");
-      fillStrip(strip, stops[i], Math.random);
+      fillStrip(strip, stops[i]);
       // start at bottom, scroll up to the target tile at index 0
-      const start = -(STRIP_LEN - 1) * tileH;
-      strip.style.transform = `translateY(${start}px)`;
+      strip.style.transform = `translateY(${-(STRIP_LEN - 1) * tileH}px)`;
       strip.offsetHeight; // reflow
       strip.style.transition = `transform ${2.2 + i * 0.7}s cubic-bezier(.15,.85,.25,1.02)`;
       strip.style.transform = "translateY(0)";
     });
 
     setTimeout(() => {
-      showResult(name, fortune, player);
+      showResult(name, fortune, took);
       renderCollection(name);
       if (coco) {
         reels.forEach(r => r.reel.classList.add("win"));
-        if (!already) rainCoins(coco.rarity === "LEGENDARY" ? 90 : coco.rarity === "RARE" ? 50 : 30);
-        creditsEl.textContent = already
-          ? "You already collected today's Coco. Come back tomorrow for another."
-          : `JACKPOT on spin #${player.spins}! ${coco.name} added to your collection.`;
+        rainCoins(coco.rarity === "LEGENDARY" ? 90 : coco.rarity === "RARE" ? 50 : 30);
+        creditsEl.textContent = `JACKPOT! ${coco.name} added to your collection.`;
       } else {
-        creditsEl.textContent = `BUST on spin #${player.spins}. Pull again.`;
+        creditsEl.textContent = player.coins ? "BUST. Pull again." : "BUST. And your pockets are empty. Visit the shop.";
       }
       spinning = false;
       spinBtn.disabled = lever.disabled = false;
     }, (2.2 + (REELS - 1) * 0.7) * 1000 + 100);
   }
 
-  function showResult(name, { coco, lucky, bustLine }, player) {
-    const portrait = document.getElementById("r-portrait");
-    const rar = document.getElementById("r-rarity");
+  function showResult(name, { coco, lucky, bustLine }, took) {
+    const portrait = $("r-portrait"), rar = $("r-rarity");
     resultEl.classList.toggle("bust", !coco);
-    document.getElementById("r-number").textContent = lucky;
+    $("r-number").textContent = lucky;
     if (coco) {
       cropStyle(portrait, coco);
-      document.getElementById("r-kicker").textContent = "TODAY YOU ARE";
-      document.getElementById("r-name").textContent = coco.name;
+      $("r-kicker").textContent = "YOU ARE";
+      $("r-name").textContent = coco.name;
       rar.textContent = coco.rarity;
       rar.className = "rarity" + (coco.rarity === "LEGENDARY" ? " legendary" : "");
-      document.getElementById("r-desc").textContent = coco.desc;
-      document.getElementById("r-odds").textContent = "1 in " + Math.round(1 / chanceOf(coco));
-      document.getElementById("r-power").textContent = coco.power;
+      $("r-desc").textContent = coco.desc;
+      $("r-odds").textContent = "1 in " + Math.round(1 / chanceOf(coco));
+      $("r-power").textContent = coco.power;
+      $("r-house").textContent = `${name}, it took ${took} ${took === 1 ? "spin" : "spins"} to find this Coco.`;
     } else {
       cropStyle(portrait, BUST);
-      document.getElementById("r-kicker").textContent = "THE HOUSE WINS";
-      document.getElementById("r-name").textContent = BUST.name;
+      $("r-kicker").textContent = "THE HOUSE WINS";
+      $("r-name").textContent = BUST.name;
       rar.textContent = "BUST";
       rar.className = "rarity bust";
-      document.getElementById("r-desc").textContent = bustLine;
-      document.getElementById("r-odds").textContent = "9 in 10";
-      document.getElementById("r-power").textContent = "Pull again";
+      $("r-desc").textContent = bustLine;
+      $("r-odds").textContent = "9 in 10";
+      $("r-power").textContent = "Pull again";
+      $("r-house").textContent = `${name}, the house is not done with you. ${took} ${took === 1 ? "spin" : "spins"} without a Coco.`;
     }
-    const day = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
-    const took = player.today && player.today.spins ? ` It took ${player.today.spins} ${player.today.spins === 1 ? "spin" : "spins"}.` : "";
-    document.getElementById("r-house").textContent = coco
-      ? `${name}, this is your Coco for ${day}.${took} Come back tomorrow for another.`
-      : `${name}, the house is not done with you. Pull the lever again.`;
     resultEl.classList.add("show");
     resultEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
+  // ---------- Wallet, collection, curse ----------
+  function refresh() {
+    const name = currentName();
+    $("wallet").hidden = !name;
+    if (name) {
+      const p = loadPlayer(name);
+      $("coin-count").textContent = p.coins;
+      $("shop-coins").textContent = p.coins;
+      $("boost-status").textContent = p.boosts
+        .map(b => `${b.name}: ${Math.round(b.chance * 100)}% chance, ${b.spins} ${b.spins === 1 ? "spin" : "spins"} left`)
+        .join(" · ");
+    } else {
+      $("boost-status").textContent = "";
+    }
+    renderCollection(name);
+    applyCurse();
+  }
+
   function renderCollection(name) {
-    const section = document.getElementById("collection");
+    const section = $("collection");
     if (!name) { section.hidden = true; return; }
     const p = loadPlayer(name);
-    const grid = document.getElementById("col-grid");
+    const grid = $("col-grid");
     grid.innerHTML = "";
     let owned = 0;
     for (const c of COCOS) {
       const n = p.counts[c.id] || 0;
       if (n) owned++;
       const item = document.createElement("div");
-      item.className = "col-item" + (n ? "" : " locked") + (p.today && p.today.id === c.id ? " today" : "");
+      item.className = "col-item" + (n ? "" : " locked") + (p.latest === c.id ? " latest" : "");
       const t = document.createElement("div");
       t.className = "tile"; cropStyle(t, c);
       item.appendChild(t);
       item.insertAdjacentHTML("beforeend", `<span class="count">×${n}</span><small>${n ? c.name : "???"}</small>`);
       grid.appendChild(item);
     }
-    document.getElementById("col-title").textContent = `${name}'s Collection · ${owned}/${COCOS.length}`;
+    $("col-title").textContent = `${name}'s Collection · ${owned}/${COCOS.length}`;
     section.hidden = false;
+  }
+
+  const TITLE = $("title").textContent, TAGLINE = $("tagline").textContent;
+  function applyCurse() {
+    const cursed = cursedToday();
+    document.body.classList.toggle("cursed", cursed);
+    $("atone-open").hidden = !cursed || !lockedName;
+    $("title").textContent = cursed ? "The Cocos Are Angry" : TITLE;
+    $("tagline").textContent = cursed ? "You spoke ill of Colton. The gods remember." : TAGLINE;
+    if (cursed && !$("drips").childElementCount) {
+      for (let i = 0; i < 22; i++) {
+        const d = document.createElement("span");
+        d.className = "drip";
+        const w = 6 + Math.random() * 14;
+        d.style.left = Math.random() * 100 + "vw";
+        d.style.width = w + "px";
+        d.style.height = 30 + Math.random() * 140 + "px";
+        d.style.animationDuration = 3 + Math.random() * 5 + "s";
+        d.style.animationDelay = -Math.random() * 6 + "s";
+        $("drips").appendChild(d);
+      }
+    }
   }
 
   function rainCoins(n) {
@@ -571,11 +988,423 @@
     }
   }
 
+  // ---------- Algebra ----------
+  const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const nz = (a, b) => { let v; do v = ri(a, b); while (v === 0); return v; };
+  const num = n => (n < 0 ? "−" + -n : "" + n);
+  // terms: [[coef, "x²" | "x" | "y" | ""]]
+  function fmt(terms) {
+    let s = "";
+    for (const [c, v] of terms) {
+      if (c === 0) continue;
+      const abs = Math.abs(c);
+      const body = (abs === 1 && v ? "" : abs) + v;
+      s += s ? (c < 0 ? " − " : " + ") + body : (c < 0 ? "−" : "") + body;
+    }
+    return s || "0";
+  }
+  const gcd = (a, b) => (b ? gcd(b, a % b) : Math.abs(a));
+  function frac(n, d) {
+    if (d < 0) { n = -n; d = -d; }
+    const g = gcd(n, d);
+    n /= g; d /= g;
+    return d === 1 ? num(n) : `${num(n)}/${d}`;
+  }
+  const ans = (label, val, text) => ({ label, val, text: text ?? num(val) });
+
+  function makeProblem(level) {
+    if (level === 1) { // x ± a = b
+      const x = ri(1, 20), a = nz(-15, 15);
+      return { lines: [`${fmt([[1, "x"], [a, ""]])} = ${num(x + a)}`], answers: [ans("x", x)] };
+    }
+    if (level === 2) { // ax + b = c
+      const a = nz(-9, 9), x = ri(-10, 10), b = nz(-20, 20);
+      if (Math.abs(a) === 1) return makeProblem(2);
+      return { lines: [`${fmt([[a, "x"], [b, ""]])} = ${num(a * x + b)}`], answers: [ans("x", x)] };
+    }
+    if (level === 3) { // ax + b = cx + d
+      const a = nz(-9, 9), c = nz(-9, 9), x = ri(-12, 12), b = ri(-20, 20);
+      if (a === c) return makeProblem(3);
+      const d = a * x + b - c * x;
+      return { lines: [`${fmt([[a, "x"], [b, ""]])} = ${fmt([[c, "x"], [d, ""]])}`], answers: [ans("x", x)] };
+    }
+    if (level === 4) { // a(x + b) = c(x + d) + e
+      const a = ri(2, 9), c = ri(2, 9), b = nz(-9, 9), d = nz(-9, 9), x = ri(-10, 10);
+      if (a === c) return makeProblem(4);
+      const e = a * (x + b) - c * (x + d);
+      const tail = e === 0 ? "" : e < 0 ? ` − ${-e}` : ` + ${e}`;
+      return { lines: [`${a}(${fmt([[1, "x"], [b, ""]])}) = ${c}(${fmt([[1, "x"], [d, ""]])})${tail}`], answers: [ans("x", x)] };
+    }
+    if (level === 5) { // 2x2 system
+      const x = ri(-9, 9), y = ri(-9, 9);
+      const a = nz(-7, 7), b = nz(-7, 7), c = nz(-7, 7), d = nz(-7, 7);
+      if (a * d - b * c === 0) return makeProblem(5);
+      return {
+        prompt: "Solve for x and y",
+        lines: [`${fmt([[a, "x"], [b, "y"]])} = ${num(a * x + b * y)}`, `${fmt([[c, "x"], [d, "y"]])} = ${num(c * x + d * y)}`],
+        answers: [ans("x", x), ans("y", y)],
+      };
+    }
+    // level 6: (px − q)(x − r) = 0 expanded, one fractional root
+    const p = ri(2, 5), r = nz(-9, 9);
+    let q; do q = nz(-12, 12); while (q % p === 0);
+    return {
+      prompt: "Find both solutions for x",
+      lines: [`${fmt([[p, "x²"], [-(p * r + q), "x"], [q * r, ""]])} = 0`],
+      answers: [ans("x", q / p, frac(q, p)), ans("x", r)],
+      unordered: true,
+      hint: "Fractions like −3/2 are fine. Order does not matter.",
+    };
+  }
+  function parseNum(s) {
+    s = s.replace(/[−–]/g, "-").replace(/\s+/g, "");
+    if (!s) return NaN;
+    const m = s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);
+    if (m) return Number(m[2]) === 0 ? NaN : Number(m[1]) / Number(m[2]);
+    return /^-?\d*\.?\d+$/.test(s) ? Number(s) : NaN;
+  }
+  const close = (a, b) => Math.abs(a - b) < 1e-6;
+  function checkAnswers(problem, vals) {
+    const want = problem.answers.map(a => a.val);
+    if (problem.unordered) return (close(vals[0], want[0]) && close(vals[1], want[1])) || (close(vals[0], want[1]) && close(vals[1], want[0]));
+    return want.every((w, i) => close(vals[i], w));
+  }
+
+  // ---------- Shop ----------
+  const shop = $("shop");
+  let activePack = null, activeProblem = null;
+
+  for (const pack of PACKS) {
+    const b = document.createElement("button");
+    b.className = "pack";
+    b.innerHTML = `<b><span class="coin-icon"></span>${pack.coins}</b><span>${pack.label}</span>` +
+      `<div class="diff" aria-label="Difficulty ${pack.level} of 6">${[1,2,3,4,5,6].map(i => `<i class="${i <= pack.level ? "on" : ""}"></i>`).join("")}</div>`;
+    b.addEventListener("click", () => startProblem(pack));
+    $("packs").appendChild(b);
+  }
+
+  function openShop() {
+    const name = currentName();
+    if (!name) { nameEl.focus(); creditsEl.textContent = "Tell the house your name before shopping."; return; }
+    showShopMain();
+    if (!shop.open) shop.showModal();
+  }
+  function showShopMain() {
+    $("shop-main").hidden = false;
+    $("shop-problem").hidden = true;
+    renderShop();
+  }
+  function renderShop() {
+    const name = currentName();
+    const p = loadPlayer(name);
+    refresh();
+    const list = $("boosts");
+    list.innerHTML = "";
+    for (const b of BOOSTS) {
+      const bought = p.boostDay[b.id] === today();
+      const row = document.createElement("div");
+      row.className = "boost";
+      row.innerHTML = `<div><strong>${b.name}</strong><span>${b.desc}</span></div>`;
+      const btn = document.createElement("button");
+      btn.className = "gold-btn";
+      btn.textContent = bought ? "Bought today" : `${b.cost} coins`;
+      btn.disabled = bought || p.coins < b.cost;
+      btn.addEventListener("click", () => buyBoost(b));
+      row.appendChild(btn);
+      list.appendChild(row);
+    }
+    const tb = $("tribute-btn");
+    if (cursedToday()) {
+      tb.disabled = true; tb.textContent = "Forbidden";
+      $("tribute-status").textContent = "The Cocos will not hear you until you atone.";
+    } else if (p.pledgeDay === today()) {
+      tb.disabled = true; tb.textContent = "Claimed";
+      $("tribute-status").textContent = "Come back tomorrow for more.";
+    } else {
+      tb.disabled = false; tb.textContent = "Pay tribute";
+      $("tribute-status").textContent = "Speak the truth about Colton once per day.";
+    }
+  }
+  function buyBoost(b) {
+    const name = currentName();
+    const p = loadPlayer(name);
+    if (p.coins < b.cost || p.boostDay[b.id] === today()) return;
+    p.coins -= b.cost;
+    p.stats.coinsSpent += b.cost;
+    p.stats.boosts++;
+    p.boostDay[b.id] = today();
+    p.boosts.push({ name: b.name, chance: b.chance, spins: b.spins });
+    savePlayer(name, p);
+    renderShop();
+    creditsEl.textContent = `${b.name} activated.`;
+  }
+
+  function startProblem(pack) {
+    activePack = pack;
+    activeProblem = makeProblem(pack.level);
+    $("shop-main").hidden = true;
+    $("shop-problem").hidden = false;
+    $("p-feedback").textContent = "";
+    $("p-feedback").className = "feedback";
+    renderProblem();
+  }
+  function renderProblem() {
+    const pr = activeProblem;
+    $("p-prompt").textContent = `${pr.prompt || "Solve for x"} to earn ${activePack.coins} Coco ${activePack.coins === 1 ? "Coin" : "Coins"}`;
+    $("p-lines").innerHTML = "";
+    for (const line of pr.lines) {
+      const d = document.createElement("div");
+      d.className = "eq";
+      d.textContent = line;
+      $("p-lines").appendChild(d);
+    }
+    $("p-answers").innerHTML = "";
+    pr.answers.forEach(a => {
+      const l = document.createElement("label");
+      l.innerHTML = `<span>${a.label} =</span><input type="text" inputmode="decimal" autocomplete="off">`;
+      $("p-answers").appendChild(l);
+    });
+    $("p-hint").textContent = pr.hint || "";
+    $("p-answers").querySelector("input").focus();
+  }
+  function submitProblem() {
+    const inputs = [...$("p-answers").querySelectorAll("input")];
+    const vals = inputs.map(i => parseNum(i.value));
+    const fb = $("p-feedback");
+    if (vals.some(isNaN)) {
+      fb.textContent = "The Cocos only accept numbers.";
+      fb.className = "feedback bad";
+      return;
+    }
+    const name = currentName();
+    const p = loadPlayer(name);
+    if (checkAnswers(activeProblem, vals)) {
+      p.coins += activePack.coins;
+      p.stats.coinsEarned += activePack.coins;
+      p.stats.solved++;
+      savePlayer(name, p);
+      refresh();
+      rainCoins(Math.min(15 + activePack.coins, 90));
+      fb.textContent = `Correct! +${activePack.coins} Coco ${activePack.coins === 1 ? "Coin" : "Coins"}. Here's another if you want more.`;
+      fb.className = "feedback good";
+    } else {
+      p.stats.missed++;
+      savePlayer(name, p);
+      const answer = activeProblem.answers.map(a => `${a.label} = ${a.text}`).join(", ");
+      fb.textContent = `Wrong. The answer was ${answer}. Try this one instead.`;
+      fb.className = "feedback bad";
+    }
+    activeProblem = makeProblem(activePack.level);
+    const keep = fb.textContent, cls = fb.className;
+    renderProblem();
+    fb.textContent = keep; fb.className = cls;
+  }
+  $("p-submit").addEventListener("click", submitProblem);
+  $("p-answers").addEventListener("keydown", e => { if (e.key === "Enter") submitProblem(); });
+  $("p-back").addEventListener("click", showShopMain);
+  $("shop-open").addEventListener("click", openShop);
+  $("tribute-btn").addEventListener("click", () => openPledge());
+
+  // ---------- Daily pledge ----------
+  const pledge = $("pledge");
+  const PLEDGE_TEXT = "colton is the coolest boss ever";
+  const MEAN = /\b(lamest|lame|lamer|worst|worse|dumbest|dumb|stupid|stupidest|smelliest|stinkiest|stinky|stinks|ugliest|ugly|meanest|mean|weakest|saddest|uncoolest|uncool|sucks|suck|sux|terrible|awful|bad|horrible|hate|loser|lousiest|lousy|boring|boringest|crappiest|crappy|crap|trash|garbage|cringe|cringiest|idiot|jerk|least|lazy|laziest|annoying|grossest|gross|meh|mid|okay|ok|fine|average|mediocre)\b|not the coolest|not cool/;
+  const normalize = s => s.toLowerCase().replace(/[^a-z\s]/g, " ").replace(/\s+/g, " ").trim();
+
+  function maybePledge(name) {
+    const p = loadPlayer(name);
+    if (cursedToday() || p.pledgeDay === today() || p.pledgeDeclined === today()) return false;
+    openPledge();
+    return true;
+  }
+  function openPledge() {
+    if (!currentName() || cursedToday()) return;
+    $("pledge-input").value = "";
+    $("pledge-msg").textContent = "";
+    if (shop.open) shop.close();
+    pledge.showModal();
+    $("pledge-input").focus();
+  }
+  function declinePledge() {
+    const name = currentName();
+    const p = loadPlayer(name);
+    if (p.pledgeDay !== today()) { p.pledgeDeclined = today(); savePlayer(name, p); }
+    if (pledge.open) pledge.close();
+    creditsEl.textContent = "Suit yourself. Each spin costs 1 Coco Coin.";
+  }
+  function claimPledge() {
+    const text = normalize($("pledge-input").value);
+    const name = currentName();
+    const p = loadPlayer(name);
+    if (text === PLEDGE_TEXT) {
+      p.coins += DAILY_TRIBUTE;
+      p.stats.coinsEarned += DAILY_TRIBUTE;
+      p.stats.tributes++;
+      p.pledgeDay = today();
+      savePlayer(name, p);
+      pledge.close();
+      refresh();
+      rainCoins(25);
+      creditsEl.textContent = `+${DAILY_TRIBUTE} Coco Coins. The Cocos are pleased. Pull the lever.`;
+    } else if (MEAN.test(text)) {
+      unleashWrath(name, p);
+    } else {
+      $("pledge-msg").textContent = "The Cocos require the exact words.";
+      const input = $("pledge-input");
+      input.classList.remove("shake"); input.offsetWidth; input.classList.add("shake");
+    }
+  }
+  function unleashWrath(name, p) {
+    const lost = p.coins;
+    p.coins = 0;
+    p.stats.coinsLost += lost;
+    p.stats.curses++;
+    p.pledgeDay = today();
+    savePlayer(name, p);
+    try { localStorage.setItem(CURSE_KEY, today()); } catch (e) {}
+    pledge.close();
+    $("wrath-text").innerHTML = lost
+      ? `For speaking ill of Colton, the coolest boss ever, you have been relieved of your remaining <b>${lost} Coco ${lost === 1 ? "Coin" : "Coins"}</b>.`
+      : `For speaking ill of Colton, the coolest boss ever, you would be relieved of your Coco Coins. <b>But you have none.</b> The Cocos find this pathetic.`;
+    $("wrath").showModal();
+    refresh();
+    creditsEl.textContent = "The Cocos are watching you.";
+  }
+  $("pledge-claim").addEventListener("click", claimPledge);
+  $("pledge-input").addEventListener("keydown", e => { if (e.key === "Enter") claimPledge(); });
+  $("pledge-skip").addEventListener("click", declinePledge);
+  pledge.addEventListener("cancel", e => { e.preventDefault(); declinePledge(); });
+  $("wrath-ok").addEventListener("click", () => $("wrath").close());
+
+  // Close buttons and click-outside for shop and pledge
+  document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => {
+    const d = b.closest("dialog");
+    if (d === pledge) declinePledge(); else d.close();
+  }));
+  shop.addEventListener("click", e => { if (e.target === shop) shop.close(); });
+
+  // ---------- Name lock ----------
+  let afterLock = null;
+  function askLockName(next) {
+    const typed = nameEl.value.trim().replace(/\s+/g, " ");
+    if (!typed) {
+      nameEl.focus();
+      creditsEl.textContent = "The house needs a name before you play.";
+      return;
+    }
+    afterLock = next;
+    $("name-preview").textContent = typed;
+    $("name-dialog").showModal();
+  }
+  $("name-confirm").addEventListener("click", () => {
+    lockedName = $("name-preview").textContent;
+    try { localStorage.setItem(NAME_KEY, lockedName); } catch (e) {}
+    nameEl.value = lockedName;
+    nameEl.readOnly = true;
+    $("name-dialog").close();
+    creditsEl.textContent = `Welcome, ${lockedName}. Each spin costs 1 Coco Coin.`;
+    refresh();
+    if (afterLock) afterLock();
+    afterLock = null;
+  });
+
+  // ---------- Stats ----------
+  function openStats() {
+    const p = loadPlayer(currentName());
+    const s = p.stats;
+    const rarest = [...COCOS].reverse().find(c => p.counts[c.id]);
+    const since = new Date(s.since + "T00:00").toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    $("st-spins").textContent = s.spins.toLocaleString();
+    const tiles = [
+      [s.cocos, "Cocos found"],
+      [s.busts, "Busts"],
+      [s.spins ? (s.cocos / s.spins * 100).toFixed(1) + "%" : "—", "Hit rate"],
+      [s.longestDry, "Longest drought"],
+      [rarest ? rarest.name : "—", "Rarest find"],
+      [Object.keys(p.counts).length + "/" + COCOS.length, "Collection"],
+      [s.coinsEarned, "Coins earned"],
+      [s.coinsSpent, "Coins spent"],
+      [s.coinsLost, "Coins lost to the gods"],
+      [s.solved, "Problems solved"],
+      [s.missed, "Problems missed"],
+      [s.boosts, "Boosts bought"],
+      [s.tributes, "Tributes paid"],
+      [s.curses, "Times cursed"],
+      [s.atonements, "Atonements"],
+    ];
+    $("stat-grid").innerHTML = "";
+    for (const [val, label] of tiles) {
+      const d = document.createElement("div");
+      d.className = "stat";
+      d.innerHTML = "<b></b><span></span>";
+      d.querySelector("b").textContent = typeof val === "number" ? val.toLocaleString() : val;
+      d.querySelector("span").textContent = label;
+      $("stat-grid").appendChild(d);
+    }
+    $("stats-title").textContent = `${currentName()}'s Stats`;
+    $("stats").querySelector(".muted")?.remove();
+    $("stat-grid").insertAdjacentHTML("afterend", `<p class="muted" style="text-align:center;margin:14px 0 0">Playing since ${since}</p>`);
+    $("stats").showModal();
+  }
+  $("stats-open").addEventListener("click", openStats);
+
+  // ---------- Atonement (lifts the curse) ----------
+  const ATONE_WORDS = 50, ATONE_UNIQUE = 25;
+  function atoneChecks(text) {
+    const words = text.toLowerCase().match(/[a-z']+/g) || [];
+    const unique = new Set(words).size;
+    const mean = normalize(text).match(MEAN);
+    return [
+      [words.length >= ATONE_WORDS, `At least ${ATONE_WORDS} words (${words.length}/${ATONE_WORDS})`],
+      [unique >= ATONE_UNIQUE, `At least ${ATONE_UNIQUE} different words (${unique}/${ATONE_UNIQUE}). No copy-paste spam.`],
+      [/\bcolton\b/i.test(text), "Mentions Colton by name"],
+      [/\bcool(er|est)?\b/i.test(text), "Says how cool he is"],
+      [!mean, mean ? `No negativity. The Cocos noticed "${mean[0]}".` : "No negativity"],
+    ];
+  }
+  function renderAtone() {
+    const checks = atoneChecks($("atone-text").value);
+    $("atone-checks").innerHTML = "";
+    for (const [ok, label] of checks) {
+      const li = document.createElement("li");
+      li.className = ok ? "ok" : "";
+      li.textContent = label;
+      $("atone-checks").appendChild(li);
+    }
+    $("atone-submit").disabled = !checks.every(c => c[0]);
+  }
+  function openAtone() {
+    $("atone-msg").textContent = "";
+    renderAtone();
+    if (shop.open) shop.close();
+    $("atone").showModal();
+    $("atone-text").focus();
+  }
+  $("atone-text").addEventListener("input", renderAtone);
+  $("atone-open").addEventListener("click", openAtone);
+  $("atone-submit").addEventListener("click", () => {
+    if (!atoneChecks($("atone-text").value).every(c => c[0])) return;
+    const name = currentName();
+    const p = loadPlayer(name);
+    p.stats.atonements++;
+    savePlayer(name, p);
+    try { localStorage.removeItem(CURSE_KEY); } catch (e) {}
+    $("atone").close();
+    $("atone-text").value = "";
+    refresh();
+    rainCoins(60);
+    creditsEl.textContent = "The Cocos have heard your words. The curse is lifted. Do not test them again.";
+  });
+
+  // ---------- Wiring ----------
   spinBtn.addEventListener("click", spin);
   lever.addEventListener("click", spin);
   nameEl.addEventListener("keydown", e => { if (e.key === "Enter") spin(); });
-  nameEl.addEventListener("change", () => renderCollection(nameEl.value.trim()));
-  renderCollection(nameEl.value.trim());
+  refresh();
+  if (currentName()) {
+    creditsEl.textContent = "Each spin costs 1 Coco Coin.";
+    maybePledge(currentName());
+  }
 </script>
 </body>
 </html>
