@@ -207,7 +207,8 @@ async function firebaseStore(appName) {
   const app = initializeApp(firebaseConfig, appName);
   const auth = A.getAuth(app);
   const db = D.getDatabase(app);
-  const r = path => D.ref(db, path);
+  // r("") is the database root (Firebase rejects an empty path string)
+  const r = path => (path ? D.ref(db, path) : D.ref(db));
   let uid = null, offset = 0;
   D.onValue(r(".info/serverTimeOffset"), s => { offset = s.val() || 0; });
 
