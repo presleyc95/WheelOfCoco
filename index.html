@@ -218,6 +218,15 @@
     background: var(--gold-deep); color: #120802;
   }
   .result .rarity.legendary { background: linear-gradient(90deg, #7b2ff7, #f107a3); color: #fff; }
+  .result .rarity.mythic {
+    background: linear-gradient(90deg, #fff7d6, #ffe39a, #ffffff, #ffe39a, #fff7d6); background-size: 200% 100%;
+    color: #6b4a12; box-shadow: 0 0 16px #fff3c4; animation: shimmer 2s linear infinite;
+  }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+
+  /* Light Coco: the Shadow Coco figure turned to radiant white-gold */
+  .light-coco { filter: invert(.9) hue-rotate(180deg) contrast(1.6) brightness(.95) sepia(.25) saturate(1.4); box-shadow: 0 0 12px 2px rgba(255,243,196,.85); }
+  .result .portrait.light-coco { box-shadow: 0 0 0 6px var(--panel-2), 0 0 50px 10px rgba(255,243,196,.9); }
   .result .rarity.bust { background: #4a4a4a; color: #ddd; }
   .result.bust { border-color: #6b6b6b; box-shadow: 0 0 30px rgba(0,0,0,.5); }
   .result.bust .portrait { filter: grayscale(1) brightness(.6); border-color: #6b6b6b; box-shadow: 0 0 0 6px #1a1a1a; }
@@ -440,6 +449,7 @@
   .feed li .what { flex: 1; min-width: 0; }
   .feed li time { color: var(--muted); font-size: 12px; white-space: nowrap; }
   .feed li.legendary .what { color: #f0b3ff; text-shadow: 0 0 10px rgba(241,7,163,.5); }
+  .feed li.mythic .what { color: #fff7d6; text-shadow: 0 0 12px rgba(255,243,196,.9); font-weight: 600; }
   .feed li.curse .what { color: #ff8a80; }
   .feed .icon { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--panel-2); border: 1px solid var(--gold-deep); font-size: 15px; }
 
@@ -509,7 +519,7 @@
   body.cursed .gold-btn { color: #fff; background: linear-gradient(180deg, #ff3030, #9b111e 50%, #4d0000); box-shadow: 0 4px 0 #300, 0 8px 18px rgba(0,0,0,.5); }
   body.cursed .result, body.cursed dialog:not(.wrath) { background: linear-gradient(#120000, #000); }
   body.cursed .modal-head { background: #120000; }
-  body.cursed .result .rarity:not(.legendary) { color: #ffb3b3; }
+  body.cursed .result .rarity:not(.legendary):not(.mythic) { color: #ffb3b3; }
   body.cursed .coin-icon, body.cursed .coin {
     background: radial-gradient(circle at 35% 35%, #ff6b6b, #b00000 55%, #3a0000); border-color: #300; color: #300;
   }
@@ -554,7 +564,7 @@
     .boost { flex-direction: column; align-items: stretch; text-align: center; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .marquee::before, .coin, .drip, body.cursed::before, body.cursed h1, .wrath h2, .wrath-img, dialog.wrath { animation: none; }
+    .marquee::before, .coin, .drip, body.cursed::before, body.cursed h1, .wrath h2, .wrath-img, dialog.wrath, .result .rarity.mythic { animation: none; }
   }
 </style>
 </head>
@@ -718,7 +728,7 @@
     <button class="close-x" data-close aria-label="Close">&times;</button>
   </div>
   <div class="modal-body">
-    <p class="muted">The Cocos may lift the curse if you prove your devotion. Write a heartfelt message about how cool Colton is. Your lost coins are gone forever, but the light may return.</p>
+    <p class="muted">The Cocos may lift the curse if you prove your devotion. Write a heartfelt message about how cool Colton is. Your lost coins are gone forever, but the light may return. Choose your words carefully: Colton reads every one.</p>
     <textarea id="atone-text" rows="8" placeholder="Colton is..."></textarea>
     <ul class="checklist" id="atone-checks"></ul>
     <div class="feedback bad" id="atone-msg" aria-live="polite"></div>
@@ -787,7 +797,7 @@
 </dialog>
 
 <script type="module">
-  import { COCOS, cropStyle as cropAt, today, normalizePlayer, publicProfile, ago, DAILY_CAP, EARN_GAP, vaultDay, vaultLeft } from "./cocos.js";
+  import { COCOS, paint, today, normalizePlayer, publicProfile, ago, DAILY_CAP, EARN_GAP, vaultDay, vaultLeft } from "./cocos.js";
   import { createStore, isLocal } from "./store.js";
 
   const TOTAL_WEIGHT = COCOS.reduce((s, c) => s + c.weight, 0);
@@ -833,7 +843,7 @@
   ];
 
   const $ = id => document.getElementById(id);
-  const cropStyle = (el, coco) => cropAt(el, coco.crop);
+  const cropStyle = paint;
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
   function roll(chance) {
@@ -930,7 +940,7 @@
     const t = document.createElement("div");
     t.className = "tile"; cropStyle(t, c);
     item.appendChild(t);
-    item.insertAdjacentHTML("beforeend", `<strong>${c.name}</strong>${c.rarity} · ${(chanceOf(c) * 100).toFixed(1)}%`);
+    item.insertAdjacentHTML("beforeend", `<strong>${c.name}</strong>${c.rarity} · ${(chanceOf(c) * 100).toFixed(chanceOf(c) < 0.001 ? 2 : 1)}%`);
     $("paytable").appendChild(item);
   }
   {
@@ -1018,7 +1028,7 @@
         post({ type: "coco", coco: coco.id });
         if (wasNew && ownedBefore === COCOS.length - 1) post({ type: "complete" });
         reels.forEach(r => r.reel.classList.add("win"));
-        rainCoins(coco.rarity === "LEGENDARY" ? 90 : coco.rarity === "RARE" ? 50 : 30);
+        rainCoins({ MYTHIC: 160, LEGENDARY: 90, RARE: 50 }[coco.rarity] || 30);
         creditsEl.textContent = `JACKPOT! ${coco.name} added to your collection.`;
       } else {
         creditsEl.textContent = player.coins ? "BUST. Pull again." : "BUST. And your pockets are empty. Visit the shop.";
@@ -1036,7 +1046,7 @@
       $("r-kicker").textContent = "YOU ARE";
       $("r-name").textContent = coco.name;
       rar.textContent = coco.rarity;
-      rar.className = "rarity" + (coco.rarity === "LEGENDARY" ? " legendary" : "");
+      rar.className = "rarity" + ({ LEGENDARY: " legendary", MYTHIC: " mythic" }[coco.rarity] || "");
       $("r-desc").textContent = coco.desc;
       $("r-odds").textContent = "1 in " + Math.round(1 / chanceOf(coco));
       $("r-power").textContent = coco.power;
@@ -1643,6 +1653,8 @@
   $("atone-open").addEventListener("click", openAtone);
   $("atone-submit").addEventListener("click", () => {
     if (!atoneChecks($("atone-text").value).every(c => c[0])) return;
+    // Keep a copy for the admin dashboard
+    store.postAtonement(currentName(), $("atone-text").value.trim()).catch(err => console.warn("Atonement not saved:", err.message));
     mutate(p => { p.stats.atonements++; delete p.cursedDay; });
     $("atone").close();
     $("atone-text").value = "";
@@ -1906,9 +1918,10 @@
         const face = el("div", "face");
         cropStyle(face, coco);
         li.appendChild(face);
-        what.append(coco.rarity === "LEGENDARY" ? " summoned the legendary " : coco.rarity === "RARE" ? " landed the rare " : " landed ");
+        what.append({ MYTHIC: " ascended with the mythic ", LEGENDARY: " summoned the legendary ", RARE: " landed the rare " }[coco.rarity] || " landed ");
         what.appendChild(el("b", null, coco.name));
         if (coco.rarity === "LEGENDARY") { what.append("!"); li.className = "legendary"; }
+        if (coco.rarity === "MYTHIC") { what.append("!!!"); li.className = "mythic"; }
       } else {
         li.appendChild(el("span", "icon", FEED_ICONS[ev.type] || "•"));
         what.append({

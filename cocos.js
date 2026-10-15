@@ -24,9 +24,13 @@ export const COCOS = [
   { id: "shadow", name: "Shadow Coco", crop: [592, 322, 128], weight: 4, rarity: "LEGENDARY",
     desc: "The forbidden Coco. Few have rolled it. Speak little, judge everything, and walk the halls unseen.",
     power: "Vanish from meetings" },
+  // Mythic: 10x rarer than Shadow. Same figure as Shadow Coco, recolored by the .light-coco CSS class.
+  { id: "light", name: "Light Coco", crop: [592, 322, 128], weight: 0.4, rarity: "MYTHIC", glow: true,
+    desc: "Shadow's radiant twin, seen once in a thousand moons. Every review goes your way, every file saves, and Colton nods in approval.",
+    power: "Divine approval" },
 ];
 
-// The daily vault: the most coins anyone can earn per day (algebra + tribute combined).
+// The daily vault: the most coins anyone can earn per day (mini-games + tribute combined).
 // The database rules enforce this too, so if you change it, also change DAILY_CAP in
 // tools/make_rules.py, regenerate database.rules.json, and republish the rules.
 export const DAILY_CAP = 150;
@@ -45,6 +49,12 @@ export const STAT_LABELS = {
   games: "Mini-games played", boosts: "Boosts bought",
   tributes: "Tributes paid", curses: "Times cursed", atonements: "Atonements",
 };
+
+// Show a Coco's face on an element (crop + the Light Coco's glow treatment)
+export function paint(el, coco) {
+  cropStyle(el, coco.crop);
+  el.classList.toggle("light-coco", !!coco.glow);
+}
 
 export function cropStyle(el, crop) {
   const [x, y, s] = crop;

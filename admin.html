@@ -101,6 +101,18 @@
   .badge.cursed { background: #5a0e09; color: #ffb3b3; }
   .badge.tribute { background: #2a3a12; color: #c8f08a; }
   .empty { text-align: center; padding: 30px; color: var(--muted); }
+  .light-coco { filter: invert(.9) hue-rotate(180deg) contrast(1.6) brightness(.95) sepia(.25) saturate(1.4); box-shadow: 0 0 12px 2px rgba(255,243,196,.85); }
+  .face.off.light-coco { filter: grayscale(1) brightness(.3); }
+
+  /* Atonements */
+  .atonements { margin-top: 20px; }
+  .atonements h2 { font: 700 20px Cinzel, serif; color: var(--gold-bright); margin: 0 0 4px; }
+  .atone-list { display: grid; gap: 10px; margin-top: 12px; }
+  .atone-item { background: var(--panel-2); border: 1px solid var(--gold-deep); border-radius: 12px; padding: 12px 14px; }
+  .atone-meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .atone-meta b { color: var(--gold-bright); }
+  .atone-meta span { color: var(--muted); font-size: 12px; margin-left: 8px; }
+  .atone-text { white-space: pre-wrap; line-height: 1.5; font-size: 14px; word-break: break-word; }
 
   /* Edit dialog */
   dialog {
@@ -216,6 +228,11 @@
         <tbody id="rows"></tbody>
       </table>
     </div>
+    <section class="card atonements">
+      <h2>Atonements <span class="muted" id="atone-count"></span></h2>
+      <p class="muted" style="margin:0">What cursed players wrote to lift the curse, newest first.</p>
+      <div class="atone-list" id="atone-list"></div>
+    </section>
   </main>
 </div>
 
@@ -278,7 +295,7 @@
 <div class="toast" id="toast" role="status"></div>
 
 <script type="module">
-  import { COCOS, STAT_KEYS, STAT_LABELS, cropStyle, today, normalizePlayer, DAILY_CAP, vaultLeft } from "./cocos.js";
+  import { COCOS, STAT_KEYS, STAT_LABELS, paint, today, normalizePlayer, DAILY_CAP, vaultLeft } from "./cocos.js";
   import { createStore, isLocal } from "./store.js";
 
   const $ = id => document.getElementById(id);
@@ -324,11 +341,52 @@
       return;
     }
     show("dash");
-    unwatch = store.watchAll((p, s) => {
+    const off1 = store.watchAll((p, s) => {
       players = p; status = s;
       render();
       if (editing && $("edit").open) $("edit-status").textContent = statusText(editing);
     });
+    const off2 = store.watchAtonements(renderAtonements);
+    unwatch = () => { off1(); off2(); };
+  }
+
+  // ---------- Atonements ----------
+  function renderAtonements(items) {
+    const list = $("atone-list");
+    list.innerHTML = "";
+    $("atone-count").textContent = items.length ? `(${items.length})` : "";
+    if (!items.length) {
+      list.innerHTML = '<div class="empty">No one has begged for forgiveness yet.</div>';
+      return;
+    }
+    for (const a of [...items].reverse()) {
+      const item = document.createElement("div");
+      item.className = "atone-item";
+      const meta = document.createElement("div");
+      meta.className = "atone-meta";
+      const who = document.createElement("div");
+      who.innerHTML = "<b></b><span></span>";
+      who.querySelector("b").textContent = a.name || "(unknown)";
+      who.querySelector("span").textContent = a.at
+        ? new Date(a.at).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + " · " + ago(a.at)
+        : "";
+      meta.appendChild(who);
+      const del = document.createElement("button");
+      del.className = "btn ghost sm";
+      del.textContent = "Delete";
+      del.addEventListener("click", async () => {
+        if (!confirm(`Delete ${a.name || "this"}'s atonement message?`)) return;
+        await store.adminDeleteAtonement(a.id);
+        toast("Atonement deleted.");
+      });
+      meta.appendChild(del);
+      item.appendChild(meta);
+      const text = document.createElement("div");
+      text.className = "atone-text";
+      text.textContent = a.text || "";
+      item.appendChild(text);
+      list.appendChild(item);
+    }
   }
 
   // ---------- Table ----------
@@ -379,7 +437,7 @@
         const f = document.createElement("div");
         f.className = "face" + (n ? "" : " off");
         f.title = `${c.name}: ${n}`;
-        cropStyle(f, c.crop);
+        paint(f, c);
         if (n > 1) f.innerHTML = `<i>${n}</i>`;
         mini.appendChild(f);
       }
@@ -440,7 +498,7 @@
       const row = document.createElement("div");
       row.className = "coco-row";
       row.innerHTML = `<div class="face"></div><span></span><input type="number" min="0" step="1">`;
-      cropStyle(row.querySelector(".face"), c.crop);
+      paint(row.querySelector(".face"), c);
       row.querySelector("span").textContent = c.name;
       const input = row.querySelector("input");
       input.value = p.counts[c.id] || 0;

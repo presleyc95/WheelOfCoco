@@ -62,7 +62,7 @@ function checkPublicWrite(player, pub) {
 function localStore() {
   const DB_KEY = "coco-local-db";
   const blank = db => {
-    for (const k of ["players", "status", "names", "public", "friends", "feed"]) db[k] = db[k] || {};
+    for (const k of ["players", "status", "names", "public", "friends", "feed", "atonements"]) db[k] = db[k] || {};
     return db;
   };
   const read = () => {
@@ -145,6 +145,9 @@ function localStore() {
         for (const k of keys.slice(0, Math.max(0, keys.length - FEED_KEEP))) delete db.feed[k];
       });
     },
+    async postAtonement(name, text) {
+      edit(db => { db.atonements[String(Date.now()).padStart(15, "0") + Math.random().toString(36).slice(2, 6)] = { uid, name, text, at: Date.now() }; });
+    },
     async friendRequest(other) { edit(db => { (db.friends[uid] ||= {})[other] = "outgoing"; (db.friends[other] ||= {})[uid] = "incoming"; }); },
     async friendAccept(other) { edit(db => { (db.friends[uid] ||= {})[other] = "accepted"; (db.friends[other] ||= {})[uid] = "accepted"; }); },
     async friendRemove(other) { edit(db => { delete (db.friends[uid] || {})[other]; delete (db.friends[other] || {})[uid]; }); },
@@ -193,6 +196,10 @@ function localStore() {
       });
     },
     async adminClearFeed() { edit(db => { db.feed = {}; }); },
+    watchAtonements(cb) {
+      return listen(db => cb(Object.entries(db.atonements).sort((a, b) => (a[0] < b[0] ? -1 : 1)).map(([id, v]) => ({ id, ...v }))));
+    },
+    async adminDeleteAtonement(id) { edit(db => { delete db.atonements[id]; }); },
   };
 }
 
@@ -258,6 +265,7 @@ async function firebaseStore(appName) {
       });
     },
     async postFeed(event) { await D.push(r("feed"), { ...event, uid, at: D.serverTimestamp() }); },
+    async postAtonement(name, text) { await D.push(r("atonements"), { uid, name, text, at: D.serverTimestamp() }); },
     async friendRequest(other) { await D.update(r(""), { [`friends/${uid}/${other}`]: "outgoing", [`friends/${other}/${uid}`]: "incoming" }); },
     async friendAccept(other) { await D.update(r(""), { [`friends/${uid}/${other}`]: "accepted", [`friends/${other}/${uid}`]: "accepted" }); },
     async friendRemove(other) { await D.update(r(""), { [`friends/${uid}/${other}`]: null, [`friends/${other}/${uid}`]: null }); },
@@ -302,6 +310,14 @@ async function firebaseStore(appName) {
       }));
     },
     async adminClearFeed() { await D.set(r("feed"), null); },
+    watchAtonements(cb) {
+      return D.onValue(D.query(r("atonements"), D.limitToLast(300)), s => {
+        const items = [];
+        s.forEach(c => { items.push({ id: c.key, ...c.val() }); });
+        cb(items);
+      });
+    },
+    async adminDeleteAtonement(id) { await D.set(r(`atonements/${id}`), null); },
   };
 }
 
