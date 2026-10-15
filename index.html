@@ -797,8 +797,8 @@
 </dialog>
 
 <script type="module">
-  import { COCOS, paint, today, normalizePlayer, publicProfile, ago, DAILY_CAP, EARN_GAP, vaultDay, vaultLeft } from "./cocos.js";
-  import { createStore, isLocal } from "./store.js";
+  import { COCOS, paint, today, normalizePlayer, publicProfile, ago, DAILY_CAP, EARN_GAP, vaultDay, vaultLeft } from "./cocos.js?v=2026-10-15";
+  import { createStore, isLocal } from "./store.js?v=2026-10-15";
 
   const TOTAL_WEIGHT = COCOS.reduce((s, c) => s + c.weight, 0);
   const COCO_CHANCE = 0.05; // base chance per spin; the other 95% is a bust
@@ -1280,7 +1280,8 @@
   // Whack-a-Coco: tap regular Cocos (+1), avoid Shadow Coco (−3)
   function whackGame(done) {
     const DURATION = WHACK_SECONDS * 1000, stage = $("g-stage"), start = performance.now();
-    const shadow = COCOS.find(c => c.id === "shadow"), regulars = COCOS.filter(c => c !== shadow);
+    // Targets are the six seated Cocos only; Light Coco shares Shadow's figure and would be confusing
+    const shadow = COCOS.find(c => c.id === "shadow"), regulars = COCOS.filter(c => c.rarity === "COMMON" || c.rarity === "RARE");
     let score = 0, over = false, spawnTimer = null;
     const holes = [];
     for (let i = 0; i < 9; i++) {
@@ -1304,8 +1305,8 @@
       if (free.length) {
         const h = pick(free);
         h.coco = Math.random() < 0.2 ? shadow : pick(regulars);
-        cropStyle(h.el, h.coco);
         h.el.className = "hole up" + (h.coco === shadow ? " shadow" : "");
+        cropStyle(h.el, h.coco); // after setting className, which would wipe the glow class
         h.timer = setTimeout(() => hide(h), 1050 - 450 * t);
       }
       spawnTimer = setTimeout(pop, 650 - 280 * t);
